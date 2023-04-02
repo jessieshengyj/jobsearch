@@ -36,7 +36,7 @@ function showHavingTable() {
 }
 
 function showNestedTable() {
-    let table = document.getElementById("havingTable");
+    let table = document.getElementById("nestedTable");
     table.style.visibility = "visible";
 }
 
