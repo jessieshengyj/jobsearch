@@ -9,26 +9,7 @@ img {
 }
 
 .main_home {
-    background-color: #1f2560;
-}
-
-.navbar {
-    position: fixed;
-    width: 100%;
-    overflow: hidden;
-    background-color: white;
-}
-
-.navbar a {
-    float: left;
-    display: block;
-    color: #1f2560;
-    text-align: center;
-    padding: 20px 20px;
-    text-decoration: none;
-    margin-right: 10px;
-    margin-left: 10px;
-    font-family: Helvetica, serif;
+    background: linear-gradient(100grad, #937ea2, #1f2560);
 }
 
 .navbar a.right {
@@ -36,17 +17,27 @@ img {
     display: block;
     color: #1f2560;
     text-align: center;
-    padding: 20px 20px;
+    padding: 20px 30px;
     text-decoration: none;
 }
 
-.navbar a:hover {
-    background-color: #353b7e;
-    color: white;
+.navbar {
+    overflow: hidden;
+    background-color: white;
+}
+
+.navbar a {
+    float: left;
+    font-size: 16px;
+    color: #1f2560;
+    text-align: center;
+    padding: 20px 30px;
+    text-decoration: none;
+    /*margin-left: 20px;*/
 }
 
 .dropdown {
-    float: left;
+    float: right;
     overflow: hidden;
 }
 
@@ -55,19 +46,24 @@ img {
     border: none;
     outline: none;
     color: #1f2560;
-    padding: 14px 16px;
+    padding: 20px 46px;
     background-color: inherit;
     font-family: inherit;
-    /*margin: 0;*/
-    text-align: center;
-    padding: 20px 20px;
-    text-decoration: none;
-    margin-right: 10px;
-    margin-left: 10px;
+}
+
+.navbar a:hover {
+    background-color: #937ea2;
+    color: white;
+}
+
+.navbar a.right:hover {
+    background-color: #353b7e;
+    color: white;
 }
 
 .dropdown:hover .dropbtn {
-    background-color: red;
+    background-color: #353b7e;
+    color: white;
 }
 
 .dropdown-content {
@@ -89,7 +85,7 @@ img {
 }
 
 .dropdown-content a:hover {
-    background-color: #ddd;
+    background-color: #c0bfbf;
 }
 
 .dropdown:hover .dropdown-content {
@@ -107,7 +103,7 @@ img {
     color: white;
     outline: none;
     text-align: center;
-    padding-top: 120px;
+    padding-top: 110px;
 }
 
 .titleText:hover {
@@ -116,7 +112,55 @@ img {
 }
 
 .slideshow_container {
-    width: 80%;
-    padding-top: 40px;
+    width: 85%;
+    padding-top: 60px;
+    padding-bottom: 150px;
     margin: 0 auto;
+}
+
+.main_company_postjob {
+    font-family: Arial, serif;
+    background: linear-gradient(100grad, #bda7cb, #6f7ca2);
+}
+
+.job_form {
+    max-width: 500px;
+    max-height: 600px;
+    margin: auto;
+    padding: 20px 30px;
+    background: #f6f6f8;
+    border-radius: 8px;
+    color: black;
+}
+
+.form {
+    padding-top: 140px;
+    padding-bottom: 30px
+}
+
+.button {
+    background-color: white;
+    border: none;
+    color: #1f2560;
+    padding: 6px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 7px;
+    transition-duration: 0.4s;
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.10), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.button:hover {
+    cursor: pointer;
+    background-color: #444660;
+    color: white;
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.45), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.main_otherinfo {
+    font-family: Arial, serif;
+    padding-top: 80px;
+    padding-bottom: 210px;
 }

@@ -13,3 +13,34 @@ function carousel() {
     x[myIndex-1].style.display = "block";
     setTimeout(carousel, 4000);
 }
+
+
+function showJoinTable() {
+    let table = document.getElementById("jobPostsTable");
+    table.style.visibility = "visible";
+}
+
+function showJobTable() {
+    let table = document.getElementById("jobTable");
+    table.style.visibility = "visible";
+}
+
+function showGroupByTable() {
+    let table = document.getElementById("groupByTable");
+    table.style.visibility = "visible";
+}
+
+function showHavingTable() {
+    let table = document.getElementById("havingTable");
+    table.style.visibility = "visible";
+}
+
+function showNestedTable() {
+    let table = document.getElementById("havingTable");
+    table.style.visibility = "visible";
+}
+
+function showDivisionTable() {
+    let table = document.getElementById("divisionTable");
+    table.style.visibility = "visible";
+}
