@@ -7,7 +7,7 @@
     <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
     <style>
       html, body {
-      background: linear-gradient(100grad, #699FC6, #1f2560);
+      background: linear-gradient(100grad, #95f3ff, #3c41a6);
       }
 
       body, div, form, input, select, p {
@@ -22,7 +22,6 @@
       body {
       margin: 0;
       font-family: Helvetica, serif;
-    /*background-color: #1f2560;*/
       background-size: cover;
       }
 
@@ -41,19 +40,16 @@
       align-items: center;
       height: 100%;
       padding: 25px;
-      background: rgba(0, 0, 0, 0.5);
-      }
-
-      .left-part, form {
-      padding: 25px;
-      }
-
-      .left-part {
-      text-align: center;
+      background: rgba(0, 0, 0, 0.4);
       }
 
       form {
-      background: rgba(0, 0, 0, 0.6);
+      padding: 25px;
+      }
+
+      form {
+      background: rgba(0,0,0,0.5);
+          border-radius: 15px;
       }
 
       .title {
@@ -79,7 +75,7 @@
       color: #eee;
       }
 
-      .btn-item, button {
+      button {
       padding: 10px 5px;
       margin-top: 20px;
       border-radius: 5px;
@@ -90,10 +86,7 @@
       font-weight: 400;
       color: #fff;
       }
-      .btn-item {
-      display: inline-block;
-      margin: 20px 5px 0;
-      }
+
       button {
       width: 100%;
       }
@@ -110,10 +103,12 @@
       height: calc(100% - 50px);
       }
 
-      .left-part, form {
+      form {
       flex: 1;
       height: auto;
       }
+
+
       }
     </style>
 </head>
