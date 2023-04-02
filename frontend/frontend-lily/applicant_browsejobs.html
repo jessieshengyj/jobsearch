@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8">
+    <title>Browse Jobs</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
+    <style>
+
+        body{
+            background: linear-gradient(100grad, #937ea2, #1f2560);
+        }
+
+    .search-container {
+        padding-top: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    input[type="text"], select {
+        padding: 8px;
+        font-size: 16px;
+        border: none;
+        border-radius: 4px;
+        margin-right: 8px;
+    }
+
+    select {
+        background-color: #f2f2f2;
+    }
+
+    button[type="submit"] {
+        padding: 8px 16px;
+        font-size: 16px;
+        background-color: #26a9e0;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #85d6de;
+    }
+        .resultTable{
+            padding-top: 50px;
+        }
+    .button-container{
+        text-align: center;
+    }
+</style>
+</head>
+
+
+<body>
+<div class="navbar_container">
+    <div class="navbar">
+        <a href="home.html">Home</a>
+        <div class="dropdown">
+            <button class="dropbtn">Company
+            </button>
+            <div class="dropdown-content">
+                <a href="company_account.html">Account</a>
+                <a href="company_postjob.html">Post Job</a>
+                <a href="company_browseapplicants.html">Browse Jobs</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <button class="dropbtn">Applicant
+            </button>
+            <div class="dropdown-content">
+                <a href="applicant_account.html">Account</a>
+                <a href="applicant_browsejobs.html">Browse Jobs</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="search-container">
+    <form>
+        <input type="text" placeholder="Search position...">
+        <select name="category">
+            <option value="all">All categories</option>
+            <option value="Sales">Sales</option>
+            <option value="Information Technology">Information Technology</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Arts and Design">Arts and Design</option>
+            <option value="Customer Service">Customer Service</option>
+            <option value="Finance">Finance</option>
+        </select>
+    </form>
+    <button onclick="showJobTable()" type="submit">Search</button>
+    <br>
+</div>
+
+
+<div class = "resultTable" id = "jobTable" style = "visibility: hidden">
+        <table>
+            <thead>
+            <tr>
+                <th>Header 1</th>
+                <th>Header 2</th>
+                <th>Header 3</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Row 1, Column 1</td>
+                <td>Row 1, Column 2</td>
+                <td>Row 1, Column 3</td>
+            </tr>
+            <tr>
+                <td>Row 2, Column 1</td>
+                <td>Row 2, Column 2</td>
+                <td>Row 2, Column 3</td>
+            </tr>
+            <tr>
+                <td>Row 3, Column 1</td>
+                <td>Row 3, Column 2</td>
+                <td>Row 3, Column 3</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <table id="jobDataTable" style="width: 100%; overflow: scroll">
+        </table>
+</div>
+
+<div class="button-container">
+    <button onclick="showJoinTable()" type="submit">Get joined job and posts table</button>
+</div>
+<div class = "resultTable" id = "jobPostsTable" style = "visibility: hidden">
+            <table>
+                <thead>
+                <tr>
+                    <th>Header 1</th>
+                    <th>Header 2</th>
+                    <th>Header 3</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Row 1, Column 1</td>
+                    <td>Row 1, Column 2</td>
+                    <td>Row 1, Column 3</td>
+                </tr>
+                <tr>
+                    <td>Row 2, Column 1</td>
+                    <td>Row 2, Column 2</td>
+                    <td>Row 2, Column 3</td>
+                </tr>
+                <tr>
+                    <td>Row 3, Column 1</td>
+                    <td>Row 3, Column 2</td>
+                    <td>Row 3, Column 3</td>
+                </tr>
+                </tbody>
+            </table>
+
+    <table id="jobPostsDataTable" style="width: 100%; overflow: scroll">
+    </table>
+</div>
+
+<div class="button-container">
+    <button onclick="showGroupByTable()" type="submit">Find the number of jobs for each category</button>
+</div>
+<div class = "resultTable" id = "groupByTable" style = "visibility: hidden">
+    <table>
+        <thead>
+        <tr>
+            <th>Header 1</th>
+            <th>Header 2</th>
+            <th>Header 3</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Row 1, Column 1</td>
+            <td>Row 1, Column 2</td>
+            <td>Row 1, Column 3</td>
+        </tr>
+        <tr>
+            <td>Row 2, Column 1</td>
+            <td>Row 2, Column 2</td>
+            <td>Row 2, Column 3</td>
+        </tr>
+        <tr>
+            <td>Row 3, Column 1</td>
+            <td>Row 3, Column 2</td>
+            <td>Row 3, Column 3</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table id="groupByDataTable" style="width: 100%; overflow: scroll">
+    </table>
+</div>
+
+
+
+<div class="button-container">
+    <button onclick="showHavingTable()" type="submit">Find job categories that has at least one remote job</button>
+</div>
+<div class = "resultTable" id = "havingTable" style = "visibility: hidden">
+    <table>
+        <thead>
+        <tr>
+            <th>Header 1</th>
+            <th>Header 2</th>
+            <th>Header 3</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Row 1, Column 1</td>
+            <td>Row 1, Column 2</td>
+            <td>Row 1, Column 3</td>
+        </tr>
+        <tr>
+            <td>Row 2, Column 1</td>
+            <td>Row 2, Column 2</td>
+            <td>Row 2, Column 3</td>
+        </tr>
+        <tr>
+            <td>Row 3, Column 1</td>
+            <td>Row 3, Column 2</td>
+            <td>Row 3, Column 3</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table id="havingDataTable" style="width: 100%; overflow: scroll">
+    </table>
+</div>
+
+
+<div class="button-container">
+    <button onclick="showNestedTable()" type="submit">Find job category with the highest average salary</button>
+</div>
+<div class = "resultTable" id = "nestedTable" style = "visibility: hidden">
+    <table>
+        <thead>
+        <tr>
+            <th>Header 1</th>
+            <th>Header 2</th>
+            <th>Header 3</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Row 1, Column 1</td>
+            <td>Row 1, Column 2</td>
+            <td>Row 1, Column 3</td>
+        </tr>
+        <tr>
+            <td>Row 2, Column 1</td>
+            <td>Row 2, Column 2</td>
+            <td>Row 2, Column 3</td>
+        </tr>
+        <tr>
+            <td>Row 3, Column 1</td>
+            <td>Row 3, Column 2</td>
+            <td>Row 3, Column 3</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table id="nestedDataTable" style="width: 100%; overflow: scroll">
+    </table>
+</div>
+
+
+<div class="button-container">
+    <button onclick="showDivisionTable()" type="submit"> Find companies that have both remote and non-remote jobs</button>
+</div>
+<div class = "resultTable" id = "divisionTable" style = "visibility: hidden">
+    <table>
+        <thead>
+        <tr>
+            <th>Header 1</th>
+            <th>Header 2</th>
+            <th>Header 3</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Row 1, Column 1</td>
+            <td>Row 1, Column 2</td>
+            <td>Row 1, Column 3</td>
+        </tr>
+        <tr>
+            <td>Row 2, Column 1</td>
+            <td>Row 2, Column 2</td>
+            <td>Row 2, Column 3</td>
+        </tr>
+        <tr>
+            <td>Row 3, Column 1</td>
+            <td>Row 3, Column 2</td>
+            <td>Row 3, Column 3</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table id="divisionDataTable" style="width: 100%; overflow: scroll">
+    </table>
+</div>
+
+
+<script type="text/javascript" src="frontend.js"></script>
+</body>
+</html>
