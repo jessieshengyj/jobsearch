@@ -2,9 +2,177 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>JobSearch Applicant Account</title>
+    <title>Manage Account</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
+    <style>
+        html, body {
+            background: linear-gradient(100grad, #937ea2, #1f2560);
+        }
+
+        body, div, form, input, select, p {
+            font-family: Roboto, Arial, sans-serif;
+            font-size: 16px;
+            color: #eee;
+        }
+
+        body {
+            margin: 0;
+            font-family: Helvetica, serif;
+            background-size: cover;
+        }
+
+        h1, h2 {
+            text-transform: uppercase;
+            font-weight: 400;
+        }
+
+        h2 {
+            margin: 0 0 0 5px;
+        }
+        .main-block {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            padding: 25px;
+            background: rgba(0, 0, 0, 0);
+        }
+
+        form {
+            padding: 25px;
+        }
+
+        form {
+            background: rgba(0,0,0,0.5);
+            border-radius: 15px;
+        }
+
+        .title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        input, select {
+            padding: 5px;
+            margin-bottom: 30px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #eee;
+        }
+
+        input::placeholder {
+            color: #eee;
+        }
+
+        button {
+            padding: 10px 5px;
+            border-radius: 5px;
+            background: #26a9e0;
+            font-size: 15px;
+            font-weight: 400;
+            color: #fff;
+            border: none;
+        }
+
+        button {
+            width: 100%;
+        }
+        button:hover {
+            background: #85d6de;
+        }
+        @media (min-width: 568px) {
+            html, body {
+                height: 100%;
+            }
+
+            .main-block {
+                flex-direction: row;
+                height: calc(100% - 50px);
+            }
+
+            form {
+                flex: 1;
+                height: auto;
+            }
+
+
+        }
+    </style>
 </head>
 <body>
+<div class="navbar_container">
+    <div class="navbar">
+        <a href="home.html">Home</a>
+        <div class="dropdown">
+            <button class="dropbtn">Company
+            </button>
+            <div class="dropdown-content">
+                <a href="company_account.html">Account</a>
+                <a href="company_postjob.html">Post Job</a>
+                <a href="company_browseapplicants.html">Browse Jobs</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <button class="dropbtn">Applicant
+            </button>
+            <div class="dropdown-content">
+                <a href="applicant_account.html">Account</a>
+                <a href="applicant_browsejobs.html">Browse Jobs</a>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div class="main-block">
+    <form action="/">
+        <div class="title">
+            <h2>Create a new account</h2>
+        </div>
+        <div class="info">
+            <input class="form-name" type="text" name="name" placeholder="Full name">
+            <input type="text" name="name" placeholder="User ID (Number)">
+            <input type="text" name="name" placeholder="Email">
+            <input type="text" name="name" placeholder="Phone number">
+            <input type="text" name="name" placeholder="Address">
+        </div>
+        <button type="submit" href="/">Create Account</button>
+    </form>
+</div>
+
+<div class="main-block">
+    <form action="/">
+        <div class="title">
+            <h2>Update account</h2>
+        </div>
+        <div class="info">
+            <input class="form-name" type="text" name="name" placeholder="Full name">
+            <input type="text" name="name" placeholder="User ID (Number)">
+            <input type="text" name="name" placeholder="New Email">
+            <input type="text" name="name" placeholder="New Phone number">
+            <input type="text" name="name" placeholder="New Address">
+        </div>
+        <button type="submit" href="/">Update Account</button>
+    </form>
+</div>
+
+<div class="main-block">
+    <form action="/">
+        <div class="title">
+            <h2>Delete account</h2>
+        </div>
+        <div class="info">
+            <input type="text" name="name" placeholder="User ID (Number)">
+        </div>
+        <button type="submit" href="/">Delete Account</button>
+    </form>
+</div>
 </body>
 </html>

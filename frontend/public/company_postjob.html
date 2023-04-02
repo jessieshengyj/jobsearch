@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Post Job</title>
+  <link rel="icon" href="images/favicon.ico" />
+  <link href="style.css" rel="stylesheet" />
+</head>
+<body class="navbar_container">
+<div class="navbar" style="position: fixed; width: 100%">
+  <a href="home.html">Home</a>
+  <a href="#Internship" class="right">Internship</a>
+  <a href="#FullTime" class="right">Part Time</a>
+  <a href="#PartTime" class="right">Full Time</a>
+</div>
+</body>
+<body>
+<div class="main_company_postjob"><br><br><br>
+  <div class="form" style="text-align: center" id="FullTime">
+    <form class="job_form">
+      <h1>Full Time Job</h1>
+      <fieldset><br>
+        <legend>Job Info</legend>
+
+        <label for="fulltime_jobID">Job ID:</label>
+        <input type="text" id="fulltime_jobID" name="jobID"><br><br>
+
+        <label for="salary">Salary:</label>
+        <input type="number" id="salary" name="salary"><br><br>
+
+      </fieldset><br>
+      <!--            <button type="submit">Submit</button><br>-->
+      <input class="button" type="submit" value="Submit" name="fulltimeSubmit"><br>
+    </form>
+  </div>
+  <div class="form" style="text-align: center" id="PartTime">
+    <form class="job_form">
+      <h1>Part Time Job</h1>
+      <fieldset><br>
+        <legend>Job Info</legend>
+
+        <label for="parttime_jobID">Job ID:</label>
+        <input type="text" id="parttime_jobID" name="jobID"><br><br>
+
+        <label for="hoursWeeks">Hours/Weeks:</label>
+        <input type="number" id="hoursWeeks" name="hoursWeeks"><br><br>
+
+        <label for="parttime_wage">Salary:</label>
+        <input type="number" id="parttime_wage" name="wage"><br><br>
+
+      </fieldset><br>
+      <!--            <button type="submit">Submit</button><br>-->
+      <input class="button" type="submit" value="Submit" name="parttimeSubmit"><br>
+    </form>
+  </div>
+  <div class="form" style="text-align: center" id="Internship">
+    <form class="job_form">
+      <h1>Internship Job</h1>
+      <fieldset><br>
+        <legend>Job Info</legend>
+
+        <label for="internship_jobID">Job ID:</label>
+        <input type="text" id="internship_jobID" name="jobID"><br><br>
+
+        <label for="duration">Duration:</label>
+        <input type="number" id="duration" name="duration"><br><br>
+
+        <label for="internship_wage">Wage:</label>
+        <input type="number" id="internship_wage" name="salary"><br><br>
+
+      </fieldset><br>
+      <!--            <button type="submit">Submit</button><br>-->
+      <input class="button" type="submit" value="Submit" name="internshipSubmit"><br>
+    </form>
+  </div><br><br><br><br><br><br><br><br><br>
+</div>
+</body>
+<script type="text/javascript" src="frontend.js"></script>
+</html>

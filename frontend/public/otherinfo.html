@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Other Info</title>
+  <link rel="icon" href="images/favicon.ico" />
+  <link href="style.css" rel="stylesheet" />
+</head>
+<body class="navbar_container">
+<div class="navbar">
+  <a href="home.html">Home</a>
+  <a href="otherinfo.html" class="right">Other Info</a>
+  <div class="dropdown">
+    <button class="dropbtn">Company
+    </button>
+    <div class="dropdown-content">
+      <a href="company_account.html">Account</a>
+      <a href="company_postjob.html">Post Job</a>
+      <a href="company_browseapplicants.html">Browse Applicants</a>
+    </div>
+  </div>
+  <div class="dropdown">
+    <button class="dropbtn">Applicant
+    </button>
+    <div class="dropdown-content">
+      <a href="applicant_account.html">Account</a>
+      <a href="applicant_browsejobs.html">Browse Jobs</a>
+    </div>
+  </div>
+</div>
+</body>
+<body style="background: linear-gradient(100grad, #1d2b64, #f8cdda)">
+<div class="main_otherinfo">
+  <div class="form" style="text-align: center" id="FullTime">
+    <form class="job_form">
+      <h1>Search Database</h1>
+      <fieldset><br>
+
+        <label for="tableName">Table Name:</label>
+        <input type="text" id="tableName" name="tableName"><br><br>
+
+        <label for="columnName">Column Name:</label>
+        <input type="text" id="columnName" name="columnName"><br><br>
+
+      </fieldset><br>
+      <!--            <button type="submit">Submit</button><br>-->
+      <input class="button" type="submit" value="Submit" name="searchSubmit"><br>
+    </form>
+  </div>
+</div>
+
+</body>
+<script type="text/javascript" src="frontend.js"></script>
+</html>
