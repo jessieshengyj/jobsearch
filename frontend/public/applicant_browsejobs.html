@@ -43,12 +43,33 @@
         button[type="submit"]:hover {
             background-color: #85d6de;
         }
-        .resultTable{
-            padding-top: 50px;
+
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 70%;
+            margin: auto;
+        }
+
+        .resultTable {
+            overflow: auto;
+            padding-top: 20px;
+            padding-bottom: 40px;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
         }
         .button-container{
             text-align: center;
         }
+
     </style>
 </head>
 
@@ -57,6 +78,7 @@
 <div class="navbar_container">
     <div class="navbar">
         <a href="home.html">Home</a>
+        <a href="otherinfo.html" class="right">Other Info</a>
         <div class="dropdown">
             <button class="dropbtn">Company
             </button>
@@ -164,6 +186,7 @@
 <div class="button-container">
     <button onclick="showGroupByTable()" type="submit">Find the number of jobs for each category</button>
 </div>
+
 <div class = "resultTable" id = "groupByTable" style = "visibility: hidden">
     <table>
         <thead>
