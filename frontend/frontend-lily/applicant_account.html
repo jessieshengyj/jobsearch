@@ -11,9 +11,6 @@
       }
 
       body, div, form, input, select, p {
-      padding: 0;
-      margin: 0;
-      outline: none;
       font-family: Roboto, Arial, sans-serif;
       font-size: 16px;
       color: #eee;
@@ -77,20 +74,18 @@
 
       button {
       padding: 10px 5px;
-      margin-top: 20px;
       border-radius: 5px;
-      border: none;
       background: #26a9e0;
-      text-decoration: none;
       font-size: 15px;
       font-weight: 400;
       color: #fff;
+          border: none;
       }
 
       button {
       width: 100%;
       }
-      button:hover, .btn-item:hover {
+      button:hover {
       background: #85d6de;
       }
       @media (min-width: 568px) {
@@ -116,8 +111,23 @@
 <div class="navbar_container">
     <div class="navbar">
         <a href="home.html">Home</a>
-        <a href="company.html" class="right">Company</a>
-        <a href="applicant.html" class="right">Applicant</a>
+        <div class="dropdown">
+            <button class="dropbtn">Company
+            </button>
+            <div class="dropdown-content">
+                <a href="company_account.html">Account</a>
+                <a href="company_postjob.html">Post Job</a>
+                <a href="company_browseapplicants.html">Browse Jobs</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <button class="dropbtn">Applicant
+            </button>
+            <div class="dropdown-content">
+                <a href="applicant_account.html">Account</a>
+                <a href="applicant_browsejobs.html">Browse Jobs</a>
+            </div>
+        </div>
     </div>
 </div>
 
