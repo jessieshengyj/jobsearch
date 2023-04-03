@@ -1,29 +1,68 @@
+DROP TABLE Applicant_Has_Education;
+DROP TABLE Applicant_Has_Skill;
+DROP TABLE Job_Has_Location;
+DROP TABLE Requires;
+DROP TABLE Applies;
+DROP TABLE Employs;
+DROP TABLE Education;
+DROP TABLE Skill;
+DROP TABLE Applicant;
+DROP TABLE Branch;
+DROP TABLE Location4;
+DROP TABLE Location3;
+DROP TABLE Location1;
+DROP TABLE HiringManager;
+DROP TABLE InternshipJob;
+DROP TABLE PartTimeJob;
+DROP TABLE FullTimeJob;
+DROP TABLE Job2;
+DROP TABLE Job1;
+DROP TABLE Company;
 
-CREATE TABLE FullTimeJob (
-JobID INTEGER PRIMARY KEY,
-Salary INTEGER,
-FOREIGN KEY (JobID) REFERENCES Job
-);
 
-CREATE TABLE PartTimeJob (
-JobID INTEGER PRIMARY KEY,
-HoursPerWeek INTEGER,
-Wage INTEGER,
-FOREIGN KEY (JobID) REFERENCES Job
-);
-
-CREATE TABLE InternshipJob (
-JobID INTEGER PRIMARY KEY,
-Duration INTEGER,
-Wage INTEGER,
-FOREIGN KEY (JobID) REFERENCES Job
-);
 
 CREATE TABLE Company (
 CompanyID INTEGER PRIMARY KEY,
 Name VARCHAR(80),
 NumberOfEmployees INTEGER
 );
+
+CREATE TABLE Job1(
+JobID INTEGER PRIMARY KEY,
+ApplicationDeadline DATE,
+Remote INTEGER,
+PositionName VARCHAR(40),
+StartDate DATE,
+CompanyID INTEGER,
+FOREIGN KEY (CompanyID) REFERENCES Company
+ON DELETE SET NULL);
+
+CREATE TABLE Job2(
+PositionName VARCHAR(40) PRIMARY KEY,
+JobCategory VARCHAR(40)
+);
+
+CREATE TABLE FullTimeJob (
+JobID INTEGER PRIMARY KEY,
+Salary INTEGER,
+FOREIGN KEY (JobID) REFERENCES Job1
+);
+
+CREATE TABLE PartTimeJob (
+JobID INTEGER PRIMARY KEY,
+HoursPerWeek INTEGER,
+Wage INTEGER,
+FOREIGN KEY (JobID) REFERENCES Job1
+);
+
+CREATE TABLE InternshipJob (
+JobID INTEGER PRIMARY KEY,
+Duration INTEGER,
+Wage INTEGER,
+FOREIGN KEY (JobID) REFERENCES Job1
+);
+
+
 
 CREATE TABLE HiringManager (
 Email VARCHAR(80) PRIMARY KEY,
@@ -48,15 +87,33 @@ PRIMARY KEY (Country, PostalCode)
 CREATE TABLE Location4 (
 Country VARCHAR(40),
 PostalCode VARCHAR(20),
-Address VARCHAR(80),
-PRIMARY KEY (Country, PostalCode, Address)
+Addy VARCHAR(80),
+PRIMARY KEY (Country, PostalCode, Addy)
 );
+
+
+CREATE TABLE Branch (
+BranchName VARCHAR(80),
+NumberOfEmployees INTEGER,
+CompanyID INTEGER,
+Country VARCHAR(40),
+Province VARCHAR(20),
+City VARCHAR(20),
+Addy VARCHAR(80),
+PRIMARY KEY (BranchName, CompanyID),
+FOREIGN KEY (Country, PostalCode, Addy) REFERENCES Location4,
+FOREIGN KEY (Country, PostalCode) REFERENCES Location3,
+FOREIGN KEY (Country, PostalCode) REFERENCES Location1,
+FOREIGN KEY (CompanyID) REFERENCES Company
+ON DELETE SET NULL
+);
+
 
 CREATE TABLE Applicant (
 UserID INTEGER PRIMARY KEY,
 Email VARCHAR(80) NOT NULL,
 Name VARCHAR(80),
-Address VARCHAR(80),
+Addy VARCHAR(80),
 PhoneNumber VARCHAR(30),
 UNIQUE (Email)
 );
@@ -74,45 +131,17 @@ Degree VARCHAR(40),
 PRIMARY KEY (NameOfInstitution, Major, Degree)
 );
 
-CREATE TABLE Job1(
-JobID INTEGER PRIMARY KEY,
-ApplicationDeadline DATE,
-Remote INTEGER,
-PositionName VARCHAR(40),
-StartDate DATE,
-CompanyID INTEGER,
-FOREIGN KEY (CompanyID) REFERENCES Company
-ON DELETE SET NULL
-ON UPDATE CASCADE
-);
 
-CREATE TABLE Job2(
-PositionName VARCHAR(40) PRIMARY KEY,
-JobCategory VARCHAR(40)
-);
 
 CREATE TABLE Employs (
-CompanyID VARCHAR(40),
+CompanyID INTEGER,
 Email VARCHAR(80),
 PRIMARY KEY (CompanyID, Email),
 FOREIGN KEY (CompanyID) REFERENCES Company,
 FOREIGN KEY (Email) REFERENCES HiringManager
 );
 
-CREATE TABLE Branch (
-BranchName VARCHAR(80),
-NumberOfEmployees INTEGER,
-CompanyID INTEGER,
-Country VARCHAR(40),
-Province VARCHAR(20),
-City VARCHAR(20),
-Address VARCHAR(80),
-PRIMARY KEY (BranchName, CompanyID),
-FOREIGN KEY (CompanyID) REFERENCES Company
-ON DELETE SET NULL
-ON UPDATE CASCADE)
-FOREIGN KEY (Country, Province, City, Address) REFERENCES Location
-);
+
 
 CREATE TABLE Applies (
 Status VARCHAR(80),
@@ -121,14 +150,14 @@ UserID INTEGER,
 JobID INTEGER,
 PRIMARY KEY (UserID, JobID),
 FOREIGN KEY (UserID) REFERENCES Applicant,
-FOREIGN KEY (JobID) REFERENCES Job
+FOREIGN KEY (JobID) REFERENCES Job1
 );
 
 CREATE TABLE Requires (
 JobID INTEGER,
 SkillID INTEGER,
 PRIMARY KEY (JobID, SkillID),
-FOREIGN KEY (JobID) REFERENCES Job,
+FOREIGN KEY (JobID) REFERENCES Job1,
 FOREIGN KEY (SkillID) REFERENCES Skill
 );
 
@@ -137,9 +166,11 @@ JobID INTEGER,
 Country VARCHAR(80),
 Province VARCHAR(80),
 City VARCHAR(80),
-Address VARCHAR(80),
-PRIMARY KEY (JobID, Country, Province, City, Address),
-FOREIGN KEY (Country, Province, City, Address) REFERENCES Location
+Addy VARCHAR(80),
+PRIMARY KEY (JobID, Country, Province, City, Addy),
+FOREIGN KEY (Country, PostalCode) REFERENCES Location1,
+FOREIGN KEY (Country, PostalCode) REFERENCES Location3,
+FOREIGN KEY (Country, PostalCode, Addy)REFERENCES Location4
 );
 
 CREATE TABLE Applicant_Has_Skill (
@@ -156,8 +187,6 @@ NameOfInstitution VARCHAR(80) NOT NULL,
 Major VARCHAR(80) NOT NULL,
 Degree VARCHAR(80) NOT NULL,
 YearStarted INTEGER NOT NULL,
-University of British Columbia, Vancouver
-Department of Computer Science
 YearGraduated INTEGER,
 PRIMARY KEY (UserID, NameOfInstitution, Major, Degree),
 FOREIGN KEY (UserID) REFERENCES Applicant,
@@ -189,11 +218,11 @@ INSERT INTO Company VALUES (3, 'PepsiCo', 315000);
 INSERT INTO Company VALUES (4, 'Apple', 164000);
 INSERT INTO Company VALUES (5, 'SAP', 111961);
 
-INSERT INTO HiringManager VALUES (‘smith@ubc.ca’, 7781234567, John Smith’’);
-INSERT INTO HiringManager VALUES (‘sharon@outlook.com’, 1234567890, ‘Sharon Lee’);
-INSERT INTO HiringManager VALUES (‘oliver@gmail.com’, 6874706123, ‘Oliver Jones’);
-INSERT INTO HiringManager VALUES (‘jon@hotmail.com’, 42810274208, ‘Jon Williams’);
-INSERT INTO HiringManager VALUES (‘emma@yahoo.com’, 0138297382, ‘Emma Brown’);
+INSERT INTO HiringManager VALUES ('smith@ubc.ca', 7781234567, 'John Smith');
+INSERT INTO HiringManager VALUES ('sharon@outlook.com', 1234567890, 'Sharon Lee');
+INSERT INTO HiringManager VALUES ('oliver@gmail.com', 6874706123, 'Oliver Jones');
+INSERT INTO HiringManager VALUES ('jon@hotmail.com', 42810274208, 'Jon Williams');
+INSERT INTO HiringManager VALUES ('emma@yahoo.com', 0138297382, 'Emma Brown');
 
 INSERT INTO Applicant VALUES (1, 'johnsmiths@hotmail.com', 'John Smiths', '4621 Flinderation
 Road', '(569) 898-4344');
@@ -213,11 +242,11 @@ INSERT INTO Skill VALUES (3, 'Problem Solving', 5);
 INSERT INTO Skill VALUES (4, 'Leadership', 3);
 INSERT INTO Skill VALUES (5, 'Time Management', 4);
 
-INSERT INTO Education VALUES (‘University of British Columbia’, ‘Marketing’, ‘Bachelor’);
-INSERT INTO Education VALUES (‘Washington State University’, ‘Chemical Engineering’, ‘Master’);
-INSERT INTO Education VALUES (‘University of Toronto’, ‘Cognitive Science’, ‘Bachelor’);
-INSERT INTO Education VALUES (‘Stanford University’, Computer Science, ‘PHD’);
-INSERT INTO Education VALUES (‘University College London’, ‘Psychology’, ‘Doctorate’);
+INSERT INTO Education VALUES ('University of British Columbia', 'Marketing', 'Bachelor');
+INSERT INTO Education VALUES ('Washington State University', 'Chemical Engineering', 'Master');
+INSERT INTO Education VALUES ('University of Toronto', 'Cognitive Science', 'Bachelor');
+INSERT INTO Education VALUES ('Stanford University', 'Computer Science', 'PHD');
+INSERT INTO Education VALUES ('University College London', 'Psychology', 'Doctorate');
 
 INSERT INTO Job1 VALUES (1, '2023-05-23', 0, 'Salesmen', '2023-09-01', 3);
 INSERT INTO Job1 VALUES (2, '2023-06-15', 1, 'Software Engineer', '2023-09-01', 1);
@@ -252,21 +281,21 @@ INSERT INTO Job2 VALUES ('Product Manager', 'Management');
 INSERT INTO Job2 VALUES ('Sales Representative', 'Sales');
 INSERT INTO Job2 VALUES ('Software Developer', 'Information Technology');
 
-INSERT INTO Employs VALUES (‘1’, ‘smith@ubc.ca’);
-INSERT INTO Employs VALUES (‘2’, ‘sharon@outlook.com’);
-INSERT INTO Employs VALUES (‘3’, ‘oliver@gmail.com’);
-INSERT INTO Employs VALUES (‘4’, ‘jon@hotmail.com’);
-INSERT INTO Employs VALUES (‘5’, ‘emma@yahoo.com’);
+INSERT INTO Employs VALUES ('1', 'smith@ubc.ca');
+INSERT INTO Employs VALUES ('2', 'sharon@outlook.com');
+INSERT INTO Employs VALUES ('3', 'oliver@gmail.com');
+INSERT INTO Employs VALUES ('4', 'jon@hotmail.com');
+INSERT INTO Employs VALUES ('5', 'emma@yahoo.com');
 
-INSERT INTO Branch VALUES (‘Vancouver Branch’, 50, 3, ‘Canada', 'British Columbia', 'Vancouver',
+INSERT INTO Branch VALUES ('Vancouver Branch', 50, 3, 'Canada', 'British Columbia', 'Vancouver',
 '291 Burrard Street');
-INSERT INTO Branch VALUES (‘Burnaby Branch’, 35, 1, 'Canada', 'British Columbia', 'Burnaby', '8098
+INSERT INTO Branch VALUES ('Burnaby Branch', 35, 1, 'Canada', 'British Columbia', 'Burnaby', '8098
 11th Ave');
-INSERT INTO Branch VALUES (LA Branch’, 46, 2, ‘United States of America’, 'California', ‘Los
-Angeles’, '6908 S Central Ave’);
-INSERT INTO Branch VALUES (‘Calgary Branch’, 28, 4, 'Canada', 'Alberta', ‘Calgary’, '1030 10 Ave
+INSERT INTO Branch VALUES ('LA Branch', 46, 2, 'United States of America', 'California', 'Los
+Angeles', '6908 S Central Ave');
+INSERT INTO Branch VALUES ('Calgary Branch', 28, 4, 'Canada', 'Alberta', 'Calgary', '1030 10 Ave
 SW');
-INSERT INTO Branch VALUES (‘London Branch’, 62, 5, 'Canada', ‘Ontario’, ‘London’, '1151
+INSERT INTO Branch VALUES ('London Branch', 62, 5, 'Canada', 'Ontario', 'London', '1151
 Richmond St');
 
 INSERT INTO Applies VALUES ('Applied', '2023-02-28', 1, 2);
@@ -278,35 +307,35 @@ INSERT INTO Applies VALUES ('Applied', '2023-03-01', 5, 12);
 INSERT INTO Requires VALUES (1, 2);
 INSERT INTO Requires VALUES (2, 3);
 INSERT INTO Requires VALUES (3, 1);
-INSERT INTO Requires VALUES (4, 5');
+INSERT INTO Requires VALUES (4, 5);
 INSERT INTO Requires VALUES (5, 4);
 
-INSERT INTO Location1 VALUES ('Canada', ‘V6C 2G8’,'British Columbia');
-INSERT INTO Location1 VALUES ('Canada', ‘V3N 2N7’,'British Columbia');
-INSERT INTO Location1 VALUES (‘United States of America’, ‘90001’, 'California');
+INSERT INTO Location1 VALUES ('Canada', 'V6C 2G8','British Columbia');
+INSERT INTO Location1 VALUES ('Canada', 'V3N 2N7','British Columbia');
+INSERT INTO Location1 VALUES ('United States of America', '90001', 'California');
 
-INSERT INTO Location1 VALUES ('Canada', ‘T2R 1M4’, 'Alberta');
-INSERT INTO Location1 VALUES ('Canada', ‘N6A 3K7’, ‘Ontario’);
+INSERT INTO Location1 VALUES ('Canada', 'T2R 1M4', 'Alberta');
+INSERT INTO Location1 VALUES ('Canada', 'N6A 3K7', 'Ontario');
 
-INSERT INTO Location3 VALUES ('Canada', ‘V6C 2G8’, ‘Vancouver’);
-INSERT INTO Location3 VALUES ('Canada', ‘V3N 2N7’, 'Burnaby');
-INSERT INTO Location3 VALUES (‘United States of America’, ‘90001’, ‘Los Angeles’);
-INSERT INTO Location3 VALUES ('Canada', ‘T2R 1M4’, ‘Calgary’);
-INSERT INTO Location3 VALUES ('Canada', ‘N6A 3K7’, ‘London’);
+INSERT INTO Location3 VALUES ('Canada', 'V6C 2G8', 'Vancouver');
+INSERT INTO Location3 VALUES ('Canada', 'V3N 2N7', 'Burnaby');
+INSERT INTO Location3 VALUES ('United States of America', '90001', 'Los Angeles');
+INSERT INTO Location3 VALUES ('Canada', 'T2R 1M4', 'Calgary');
+INSERT INTO Location3 VALUES ('Canada', 'N6A 3K7', 'London');
 
-INSERT INTO Location4 VALUES ('Canada', ‘V6C 2G8’, ‘291 Burrard Street');
-INSERT INTO Location4 VALUES ('Canada', ‘V3N 2N7’, '8098 11th Ave’);
-INSERT INTO Location4 VALUES (‘United States of America’, ‘90001’, '6908 S Central Ave’);
-INSERT INTO Location4 VALUES ('Canada', ‘T2R 1M4’, '1030 10 Ave SW');
-INSERT INTO Location4 VALUES ('Canada', ‘N6A 3K7’, ‘1151 Richmond St’);
+INSERT INTO Location4 VALUES ('Canada', 'V6C 2G8', '291 Burrard Street');
+INSERT INTO Location4 VALUES ('Canada', 'V3N 2N7', '8098 11th Ave');
+INSERT INTO Location4 VALUES ('United States of America', '90001', '6908 S Central Ave');
+INSERT INTO Location4 VALUES ('Canada', 'T2R 1M4', '1030 10 Ave SW');
+INSERT INTO Location4 VALUES ('Canada', 'N6A 3K7', '1151 Richmond St');
 
 INSERT INTO Job_Has_Location VALUES (1, 'Canada', 'British Columbia', 'Vancouver', '291 Burrard
 Street');
 INSERT INTO Job_Has_Location VALUES (2, 'Canada', 'British Columbia', 'Burnaby', '8098 11th Ave');
-INSERT INTO Job_Has_Location VALUES (3, ‘United States of America’, 'California', ‘Los Angeles’,
-'6908 S Central Ave’);
-INSERT INTO Job_Has_Location VALUES (4, 'Canada', 'Alberta', ‘Calgary’, '1030 10 Ave SW');
-INSERT INTO Job_Has_Location VALUES (5, 'Canada', ‘Ontario’, ‘London’, '1151 Richmond St');
+INSERT INTO Job_Has_Location VALUES (3, 'United States of America', 'California', 'Los Angeles',
+'6908 S Central Ave');
+INSERT INTO Job_Has_Location VALUES (4, 'Canada', 'Alberta', 'Calgary', '1030 10 Ave SW');
+INSERT INTO Job_Has_Location VALUES (5, 'Canada', 'Ontario', 'London', '1151 Richmond St');
 
 INSERT INTO Applicant_Has_Skill VALUES (1, 1);
 INSERT INTO Applicant_Has_Skill VALUES (1, 2);
@@ -315,13 +344,13 @@ INSERT INTO Applicant_Has_Skill VALUES (4, 5);
 INSERT INTO Applicant_Has_Skill VALUES (5, 3);
 
 
-INSERT INTO Applicant_Has_Education VALUES (1, ‘University of British Columbia’, ‘Marketing’,
-‘Bachelor’, 2001, 2005);
-INSERT INTO Applicant_Has_Education VALUES (2, ‘University of British Columbia’, ‘Marketing’,
-‘Bachelor’, 2004, 2008);
-INSERT INTO Applicant_Has_Education VALUES (1, ‘University of Toronto’, ‘Cognitive Science’,
-‘Bachelor’, 2016, 2021);
-INSERT INTO Applicant_Has_Education VALUES (3, ‘Stanford University’, Computer Science,
-‘PHD’, 2016, 2020);
-INSERT INTO Applicant_Has_Education VALUES (3, ‘University College London’, ‘Psychology’,
-‘Doctorate’, 2010, 2013);
+INSERT INTO Applicant_Has_Education VALUES (1, 'University of British Columbia', 'Marketing',
+'Bachelor', 2001, 2005);
+INSERT INTO Applicant_Has_Education VALUES (2, 'University of British Columbia', 'Marketing',
+'Bachelor', 2004, 2008);
+INSERT INTO Applicant_Has_Education VALUES (1, 'University of Toronto', 'Cognitive Science',
+'Bachelor', 2016, 2021);
+INSERT INTO Applicant_Has_Education VALUES (3, 'Stanford University', 'Computer Science',
+'PHD', 2016, 2020);
+INSERT INTO Applicant_Has_Education VALUES (3, 'University College London', 'Psychology',
+'Doctorate', 2010, 2013);
