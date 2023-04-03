@@ -16,7 +16,7 @@
   extension.  You must also change the username and password on the
   OCILogon below to be your ORACLE username and password -->
 
-<html>
+  <html>
     <head>
         <title>CPSC 304 PHP/Oracle Demonstration</title>
     </head>
@@ -46,15 +46,53 @@
 
         <hr />
 
-        <h2>Update Name in DemoTable</h2>
-        <p>The values are case sensitive and if you enter in the wrong case, the update statement will not do anything.</p>
-
+        <h2>Update Account Information</h2>
+        
         <form method="POST" action="backend.php"> <!--refresh page when submitted-->
             <input type="hidden" id="updateQueryRequest" name="updateQueryRequest">
-            Old Name: <input type="text" name="oldName"> <br /><br />
-            New Name: <input type="text" name="newName"> <br /><br />
+            UserID: <input type="text" name="UpdUserID"> <br /><br />
+            Name: <input type="text" name="newName"> <br /><br />
+            Email Address: <input type="text" name="UpdEmail"> <br /><br />
+            Address: <input type="text" name="UpdAddress"> <br /><br />
+            Phone Numer: <input type="text" name="UpdPhoneNumber"> <br /><br />
+            <input type="submit" value="Update" name="updateAccountInfoSubmit"></p>
+        </form>
 
-            <input type="submit" value="Update" name="updateSubmit"></p>
+        <hr />
+
+
+        <h2>Create a Job</h2>
+
+        <form method="POST" action="backend.php"> <!--refresh page when submitted-->
+            <input type="hidden" id="insertJobRequest" name="insertJobRequest">
+            JobID (Number): <input type="text" name="InsJobID"> <br /><br />
+            Application Deadline (yyyy--mm--dd): <input type="text" name="InsJobDeadline"> <br /><br />
+            Remote (yes, no, or hybrid): <input type="text" name="InsJobRemote"> <br /><br />
+            PositionName: <input type="text" name="InsJobPosName"> <br /><br />
+            StartDate (yyyy--mm--dd): <input type="text" name="InsJobStartDate"> <br /><br />
+            CompanyID (Number) : <input type="text" name="InsJobCompID"> <br /><br />
+            Job Catagory: <input type="text" name="InsJobCatagory"> <br /><br />
+            <input type="submit" value="Insert" name="insertSubmit"></p>
+        </form>
+
+        <h2>Create a Company</h2>
+
+        <form method="POST" action="backend.php"> <!--refresh page when submitted-->
+            <input type="hidden" id="insertCompanyRequest" name="insertCompanyRequest">
+            CompanyID (number): <input type="text" name="InsCompanyCompanID"> <br /><br />
+            Company Name: <input type="text" name="InsCompanyName"> <br /><br />
+            NumberOfEmployees: <input type="text" name="InsCompanyNumberOfEmployees"> <br /><br />
+            <input type="submit" value="Insert" name="insertSubmit"></p>
+        </form>
+
+        <hr />
+
+        <h2>Delete a Company</h2>
+
+        <form method="POST" action="backend.php"> <!--refresh page when submitted-->
+            <input type="hidden" id="deleteCompanyRequest" name="deleteCompanyRequest">
+            CompanyID (number): <input type="text" name="DelCompanyCompanID"> <br /><br />
+            <input type="submit" value="Delete" name="DeleteSubmit"></p>
         </form>
 
         <hr />
@@ -181,19 +219,17 @@
             global $db_conn;
             $tuple = array (
                 ":bind1" => $_POST['UpdUserID'],
-                ":bind2" => $_POST['UpdEmail']
-                ":bind3" => $_POST['UpdName']
-                ":bind4" => $_POST['UpdAddress']
+                ":bind2" => $_POST['UpdEmail'],
+                ":bind3" => $_POST['UpdName'],
+                ":bind4" => $_POST['UpdAddress'],
                 ":bind5" => $_POST['UpdPhoneNumber']
             );
 
             $alltuples = array (
                 $tuple
             );
-
-            executeBoundSQL("UPDATE Applicant SET Email = :bind2, Name = :bind3, Address = :bind4, PhoneNumber = :bind5 WHERE UserID=, $alltuples);
-            OCICommit($db_conn);
-
+           
+            executeBoundSQL("update Applicant set Email = :bind2, Name = :bind3, Addy = :bind4, PhoneNumber = :bind5 where UserID = :bind1", $alltuples);
             OCICommit($db_conn);
         }
 
@@ -214,9 +250,9 @@
             //Getting the values from user and insert data into the table
             $tuple = array (
                 ":bind1" => $_POST['InsUserID'],
-                ":bind2" => $_POST['InsEmail']
-                ":bind3" => $_POST['InsName']
-                ":bind4" => $_POST['InsAddress']
+                ":bind2" => $_POST['InsEmail'],
+                ":bind3" => $_POST['InsName'],
+                ":bind4" => $_POST['InsAddress'],
                 ":bind5" => $_POST['InsPhoneNumber']
             );
 
@@ -238,6 +274,69 @@
             }
         }
 
+        function handleInsertJobRequest() {
+            global $db_conn;
+
+            //Getting the values from user and insert data into the table
+            $tuple = array (
+                ":bind1" => $_POST['InsJobID'],
+                ":bind2" => $_POST['InsJobDeadline'],
+                ":bind3" => $_POST['InsJobRemote'],
+                ":bind4" => $_POST['InsJobPosName'],
+                ":bind5" => $_POST['InsJobStartDate'],
+                ":bind6" => $_POST['InsJobCompID']
+            );
+
+            $alltuples = array (
+                $tuple
+            );
+
+            executeBoundSQL("insert into Job1 values (:bind1, :bind2, :bind3, :bind4, :bind5, :bind6)", $alltuples);
+            $tuple = array (
+                ":bind1" => $_POST['InsJobPosName'],
+                ":bind2" => $_POST['InsJobCatagory']
+            );
+
+            $alltuples = array (
+                $tuple
+            );
+
+            executeBoundSQL("insert into Job2 values (:bind1, :bind2) ", $alltuples);
+            OCICommit($db_conn);
+        }
+
+        function handleInsertCompanyRequest() {
+            global $db_conn;
+
+            //Getting the values from user and insert data into the table
+            $tuple = array (
+                ":bind1" => $_POST['InsCompanyCompanID'],
+                ":bind2" => $_POST['InsCompanyName'],
+                ":bind3" => $_POST['InsCompanyNumberOfEmployees']
+            );
+            $alltuples = array (
+                $tuple
+            );
+
+            executeBoundSQL("insert into Company values (:bind1, :bind2, :bind3)", $alltuples);
+            OCICommit($db_conn);
+        }
+
+        function handleDeleteCompanyRequest() {
+            global $db_conn;
+
+            //Getting the values from user and insert data into the table
+            $tuple = array (
+                ":bind1" => $_POST['DelCompanyCompanID'],
+            );
+            $alltuples = array (
+                $tuple
+            );
+
+            executeBoundSQL("delete from Company where CompanyID = :bind1:", $alltuples);
+            OCICommit($db_conn);
+        }
+
         // HANDLE ALL POST ROUTES
 	// A better coding practice is to have one method that reroutes your requests accordingly. It will make it easier to add/remove functionality.
         function handlePOSTRequest() {
@@ -245,9 +344,15 @@
                 if (array_key_exists('resetTablesRequest', $_POST)) {
                     handleResetRequest();
                 } else if (array_key_exists('updateQueryRequest', $_POST)) {
-                    handleUpdateAccountRequest();
+                    handleUpdateApplicantRequest();
                 } else if (array_key_exists('insertQueryRequest', $_POST)) {
                     handleInsertApplicantRequest();
+                } else if (array_key_exists('insertJobRequest', $_POST)) {
+                    handleInsertJobRequest();
+                } else if (array_key_exists('insertCompanyRequest', $_POST)) {
+                    handleInsertCompanyRequest();
+                }  else if (array_key_exists('deleteCompanyRequest', $_POST)) {
+                    handleDeleteCompanyRequest();
                 }
 
                 disconnectFromDB();
@@ -266,7 +371,7 @@
             }
         }
 
-		if (isset($_POST['reset']) || isset($_POST['updateSubmit']) || isset($_POST['insertSubmit'])) {
+		if (isset($_POST['reset']) || isset($_POST['updateAccountInfoSubmit']) || isset($_POST['insertSubmit']) || isset($_POST['DeleteSubmit'])) {
             handlePOSTRequest();
         } else if (isset($_GET['countTupleRequest'])) {
             handleGETRequest();
