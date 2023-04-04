@@ -83,11 +83,20 @@
 
         <hr />
 
-        <h2>Count the Tuples in DemoTable</h2>
+        <h2>Count the Number of Jobs by Type</h2>
         <form method="GET" action="backend.php"> <!--refresh page when submitted-->
-            <input type="hidden" id="countTupleRequest" name="countTupleRequest">
-            <input type="submit" name="countTuples"></p>
+            <input type="hidden" id="countJobsRequest" name="countJobsRequest">
+            <input type="submit" name="countJobsByType"></p>
         </form>
+
+    <hr />
+
+
+        <h2>All employers looking for multiple employees</h2>
+            <form method="GET" action="backend.php"> <!--refresh page when submitted-->
+                <input type="hidden" id="employersMultipleEmployees" name="employersMultipleEmployees">
+                <input type="submit" name="FindEmployersMultEmployees"></p>
+            </form>
 
     <hr />
 
@@ -110,6 +119,16 @@
   <h2>Browse Jobs by Category</h2>
 
   <form method="POST" action="backend.php"> <!--refresh page when submitted-->
+        <input type="hidden" id="BrowseJobCatergory" name="BrowseJobCatergory">
+        Job Category: <input type="text" name="BrowseJobCatergory"> <br /><br />
+        <input type="submit" value="Insert" name="insertSubmit"></p>
+    </form>
+
+
+
+
+<!-- 
+  <form method="POST" action="backend.php"> 
     <input type="hidden" id="browseJobs" name="browseJobCategories">
 
 
@@ -118,15 +137,15 @@
             
         <option value="">--- Choose a Job Category ---</option>
         <?php 
-         $stid= executePlainSQL("SELECT DISTINCT JobCategory FROM Job2");
-        while ($row = oci_fetch_array($stid, OCI_BOTH))  
-        { 
-        echo "<option value=\"JobCategory\">" . $row['JobCategory'] . "</option>"; 
-        } 
+        //  $stid= executePlainSQL("SELECT DISTINCT JobCategory FROM Job2");
+        // while ($row = oci_fetch_array($stid, OCI_BOTH))  
+        // { 
+        // echo "<option value=\"JobCategory\">" . $row['JobCategory'] . "</option>"; 
+        // } 
         ?>   
         </select>
      <button type="submit">Select</button>
-</form>
+</form> -->
 
 
         <?php
@@ -289,15 +308,7 @@
             OCICommit($db_conn);
         }
 
-        function handleCountRequest() {
-            global $db_conn;
-
-            $result = executePlainSQL("SELECT Count(*) FROM demoTable");
-
-            if (($row = oci_fetch_row($result)) != false) {
-                echo "<br> The number of tuples in demoTable: " . $row[0] . "<br>";
-            }
-        }
+    
 
         function handleInsertJobRequest() {
             global $db_conn;
@@ -367,7 +378,7 @@
 
             //Getting the values from user and insert data into the table
             $tuple = array (
-                ":bind1" => $_POST['browseJobCategories'],
+                ":bind1" => $_POST['BrowseJobCatergory'],
             );
             $alltuples = array (
                 $tuple
@@ -395,19 +406,51 @@
                     handleDeleteCompanyRequest();
                 } else if (array_key_exists('browseJobCategories', $_POST)) {
                     handleBrowseJobCategoriesRequest();
-                }
+                } 
 
                 disconnectFromDB();
             }
         }
 
+
+        function handleCountRequest() {
+            global $db_conn;
+
+            $result = executePlainSQL("SELECT J2.JobCategory, Count(*) FROM Job1 J1, Job2 J2 WHERE J1.PositionName = J2.PositionName GROUP BY J2.JobCategory");
+            echo "<br>Found Number of Jobs grouped by category:<br>";
+            echo "<table>";
+            echo "<tr><th>Job Category</th><th>Number of Jobs in Category</th></tr>";
+            while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+                echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] . "</td></tr>"; //or just use "echo $row[0]"
+            }
+
+            echo "</table>";
+
+        }
+
+        function handleFindEmplyersMultEmployees() {
+            global $db_conn;
+
+            $result = executePlainSQL("SELECT C.Name, Count(*) FROM Job1 J1, Company C WHERE J1.CompanyID = C.CompanyID GROUP BY C.Name HAVING Count(*) >= 2");
+            echo "<br>Found Number employers looking for more than 1 employee:<br>";
+            echo "<table>";
+            echo "<tr><th>Employer</th><th>Number of employees being hired</th></tr>";
+            while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+                echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] . "</td></tr>"; //or just use "echo $row[0]"
+            }
+
+            echo "</table>";
+
+        }
         // HANDLE ALL GET ROUTES
 	// A better coding practice is to have one method that reroutes your requests accordingly. It will make it easier to add/remove functionality.
         function handleGETRequest() {
             if (connectToDB()) {
-                if (array_key_exists('countTuples', $_GET)) {
-                    handleCountRequest();
-                }
+                if (array_key_exists('countJobsByType', $_GET)) {
+                    handleCountJobByTypeRequest();
+                } else if (array_key_exists('FindEmployersMultEmployees', $_GET)) {
+                    handleFindEmplyersMultEmployees();
+                } 
 
                 disconnectFromDB();
             }
@@ -415,7 +458,7 @@
 
 		if (isset($_POST['reset']) || isset($_POST['updateAccountInfoSubmit']) || isset($_POST['insertSubmit']) || isset($_POST['DeleteSubmit'])) {
             handlePOSTRequest();
-        } else if (isset($_GET['countTupleRequest'])) {
+        } else if (isset($_GET['countJobsRequest']) || isset($_GET['employersMultipleEmployees'])) {
             handleGETRequest();
         }
 		?>
