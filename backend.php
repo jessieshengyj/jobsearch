@@ -58,23 +58,9 @@
             <input type="submit" value="Update" name="updateAccountInfoSubmit"></p>
         </form>
 
-        <hr />
+       
 
-
-        <h2>Create a Job</h2>
-
-        <form method="POST" action="backend.php"> <!--refresh page when submitted-->
-            <input type="hidden" id="insertJobRequest" name="insertJobRequest">
-            JobID (Number): <input type="text" name="InsJobID"> <br /><br />
-            Application Deadline (yyyy--mm--dd): <input type="text" name="InsJobDeadline"> <br /><br />
-            Remote (yes, no, or hybrid): <input type="text" name="InsJobRemote"> <br /><br />
-            PositionName: <input type="text" name="InsJobPosName"> <br /><br />
-            StartDate (yyyy--mm--dd): <input type="text" name="InsJobStartDate"> <br /><br />
-            CompanyID (Number) : <input type="text" name="InsJobCompID"> <br /><br />
-            Job Catagory: <input type="text" name="InsJobCatagory"> <br /><br />
-            <input type="submit" value="Insert" name="insertSubmit"></p>
-        </form>
-
+         <hr />
         <h2>Create a Company</h2>
 
         <form method="POST" action="backend.php"> <!--refresh page when submitted-->
@@ -102,6 +88,46 @@
             <input type="hidden" id="countTupleRequest" name="countTupleRequest">
             <input type="submit" name="countTuples"></p>
         </form>
+
+    <hr />
+
+    <h2>Create a Job</h2>
+
+    <form method="POST" action="backend.php"> <!--refresh page when submitted-->
+        <input type="hidden" id="insertJobRequest" name="insertJobRequest">
+        JobID (Number): <input type="text" name="InsJobID"> <br /><br />
+        Application Deadline (yyyy--mm--dd): <input type="text" name="InsJobDeadline"> <br /><br />
+        Remote (yes, no, or hybrid): <input type="text" name="InsJobRemote"> <br /><br />
+        PositionName: <input type="text" name="InsJobPosName"> <br /><br />
+        StartDate (yyyy--mm--dd): <input type="text" name="InsJobStartDate"> <br /><br />
+        CompanyID (Number) : <input type="text" name="InsJobCompID"> <br /><br />
+        Job Catagory: <input type="text" name="InsJobCatagory"> <br /><br />
+        <input type="submit" value="Insert" name="insertSubmit"></p>
+    </form>
+
+  <hr />
+
+  <h2>Browse Jobs by Category</h2>
+
+  <form method="POST" action="backend.php"> <!--refresh page when submitted-->
+    <input type="hidden" id="browseJobs" name="browseJobCategories">
+
+
+        <label for="JobCategory">Choose a Job Category:</label>
+        <select name="JobCategory" id="JobCategory">
+            
+        <option value="">--- Choose a Job Category ---</option>
+        <?php 
+         $stid= executePlainSQL("SELECT DISTINCT JobCategory FROM Job2");
+        while ($row = oci_fetch_array($stid, OCI_BOTH))  
+        { 
+        echo "<option value=\"JobCategory\">" . $row['JobCategory'] . "</option>"; 
+        } 
+        ?>   
+        </select>
+     <button type="submit">Select</button>
+</form>
+
 
         <?php
 		//this tells the system that it's no longer just parsing html; it's now parsing PHP
@@ -178,13 +204,12 @@
             }
         }
 
-        function printResult($result) { //prints results from a select statement
+        function printBrowseJobs($result) { //prints results from a select statement
             echo "<br>Retrieved data from table demoTable:<br>";
             echo "<table>";
-            echo "<tr><th>ID</th><th>Name</th></tr>";
-
+            echo "<tr><th>Job ID</th><th>Position Name</th><th>Job Category</th><th>Job is Remote</th><th>Job Start Date</th><th>Application Deadline</th><th>Company ID</th></tr>";
             while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-                echo "<tr><td>" . $row["ID"] . "</td><td>" . $row["NAME"] . "</td></tr>"; //or just use "echo $row[0]"
+                echo "<tr><td>" . $row["J1.JobID"] . "</td><td>" . $row["J1.PositionName,"] . "</td><td>" . $row["J2.JobCategory,"] . "</td><td>" . $row["J1.Remote,"] . "</td><td>" . $row["J1.StartDate,"] . "</td><td>" . $row["J1.ApplicationDeadline,"] . "</td><td>" . $row["J1.CompanyID,"] . "</td></tr>"; //or just use "echo $row[0]"
             }
 
             echo "</table>";
@@ -337,6 +362,21 @@
             OCICommit($db_conn);
         }
 
+        function handleBrowseJobCategoriesRequest() {
+            global $db_conn;
+
+            //Getting the values from user and insert data into the table
+            $tuple = array (
+                ":bind1" => $_POST['browseJobCategories'],
+            );
+            $alltuples = array (
+                $tuple
+            );
+
+            $result = executeBoundSQL("select J1.JobID, J1.PositionName, J2.JobCategory, J1.Remote, J1.StartDate, J1.ApplicationDeadline, J1.CompanyID, from Job1 J1, Job2 J2 where J2.JobCategory = :bind1: AND J1.PositionName = J2.PositionName ", $alltuples);
+            OCICommit($db_conn);
+            printBrowseJobs($result);
+        }
         // HANDLE ALL POST ROUTES
 	// A better coding practice is to have one method that reroutes your requests accordingly. It will make it easier to add/remove functionality.
         function handlePOSTRequest() {
@@ -353,6 +393,8 @@
                     handleInsertCompanyRequest();
                 }  else if (array_key_exists('deleteCompanyRequest', $_POST)) {
                     handleDeleteCompanyRequest();
+                } else if (array_key_exists('browseJobCategories', $_POST)) {
+                    handleBrowseJobCategoriesRequest();
                 }
 
                 disconnectFromDB();
