@@ -83,7 +83,7 @@
 
         <hr />
 
-        <h2>Count the Number of Jobs by Type</h2>
+        <h2>Count the Number of Jobs by Category</h2>
         <form method="GET" action="backend.php"> <!--refresh page when submitted-->
             <input type="hidden" id="countJobsRequest" name="countJobsRequest">
             <input type="submit" name="countJobsByType"></p>
@@ -116,6 +116,24 @@
 
   <hr />
 
+  <form method="POST" action="backend.php"> 
+    <input type="hidden" id="browseJobs" name="browseJobCategories">
+
+
+        <label for="JobCategory">Choose a Job Category:</label>
+        <select name="JobCategory" id="JobCategory">
+            
+        <option value="">--- Choose a Job Category ---</option>
+        <?php 
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL);
+        handleDisplayJobCatDropdown();
+        ?>   
+        </select>
+     <button type="submit">Select</button>
+</form>
+
   <h2>Browse Jobs by Category</h2>
 
   <form method="POST" action="backend.php"> <!--refresh page when submitted-->
@@ -127,28 +145,13 @@
 
 
 
-<!-- 
-  <form method="POST" action="backend.php"> 
-    <input type="hidden" id="browseJobs" name="browseJobCategories">
 
-
-        <label for="JobCategory">Choose a Job Category:</label>
-        <select name="JobCategory" id="JobCategory">
-            
-        <option value="">--- Choose a Job Category ---</option>
-        <?php 
-        //  $stid= executePlainSQL("SELECT DISTINCT JobCategory FROM Job2");
-        // while ($row = oci_fetch_array($stid, OCI_BOTH))  
-        // { 
-        // echo "<option value=\"JobCategory\">" . $row['JobCategory'] . "</option>"; 
-        // } 
-        ?>   
-        </select>
-     <button type="submit">Select</button>
-</form> -->
-
+ 
 
         <?php
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL);
 		//this tells the system that it's no longer just parsing html; it's now parsing PHP
 
         $success = True; //keep track of errors so it redirects the page only if there are no errors
@@ -221,14 +224,19 @@
                     $success = False;
                 }
             }
+            return $statement;
         }
 
         function printBrowseJobs($result) { //prints results from a select statement
             echo "<br>Retrieved data from table demoTable:<br>";
             echo "<table>";
             echo "<tr><th>Job ID</th><th>Position Name</th><th>Job Category</th><th>Job is Remote</th><th>Job Start Date</th><th>Application Deadline</th><th>Company ID</th></tr>";
+            // echo "<tr><th>TestHeader</th></tr>";
+        
             while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-                echo "<tr><td>" . $row["J1.JobID"] . "</td><td>" . $row["J1.PositionName,"] . "</td><td>" . $row["J2.JobCategory,"] . "</td><td>" . $row["J1.Remote,"] . "</td><td>" . $row["J1.StartDate,"] . "</td><td>" . $row["J1.ApplicationDeadline,"] . "</td><td>" . $row["J1.CompanyID,"] . "</td></tr>"; //or just use "echo $row[0]"
+                print_r($row);
+                echo "<tr><td>" . $row["JOBID"] . "</td><td>" . $row["POSITIONNAME"] . "</td><td>" . $row["JOBCATEGORY"] . "</td><td>" . $row["REMOTE"] . "</td><td>" . $row["STARTDATE"] . "</td><td>" . $row["APPLICATIONDEADLINE"] . "</td><td>" . $row["COMPANYID"] . "</td></tr>"; //or just use "echo $row[0]"
+                // echo "<tr><td>test</td></tr>"; //or just use "echo $row[0]"
             }
 
             echo "</table>";
@@ -384,8 +392,8 @@
                 $tuple
             );
 
-            $result = executeBoundSQL("select J1.JobID, J1.PositionName, J2.JobCategory, J1.Remote, J1.StartDate, J1.ApplicationDeadline, J1.CompanyID, from Job1 J1, Job2 J2 where J2.JobCategory = :bind1: AND J1.PositionName = J2.PositionName ", $alltuples);
-            OCICommit($db_conn);
+            $result = executeBoundSQL("select J1.JobID, J1.PositionName, J2.JobCategory, J1.Remote, J1.StartDate, J1.ApplicationDeadline, J1.CompanyID from Job1 J1, Job2 J2 where J2.JobCategory = :bind1 AND J1.PositionName = J2.PositionName ", $alltuples);
+            print_r($result);
             printBrowseJobs($result);
         }
         // HANDLE ALL POST ROUTES
@@ -404,7 +412,7 @@
                     handleInsertCompanyRequest();
                 }  else if (array_key_exists('deleteCompanyRequest', $_POST)) {
                     handleDeleteCompanyRequest();
-                } else if (array_key_exists('browseJobCategories', $_POST)) {
+                } else if (array_key_exists('BrowseJobCatergory', $_POST)) {
                     handleBrowseJobCategoriesRequest();
                 } 
 
@@ -413,18 +421,27 @@
         }
 
 
-        function handleCountRequest() {
+        function handleCountJobByTypeRequest() {
             global $db_conn;
 
-            $result = executePlainSQL("SELECT J2.JobCategory, Count(*) FROM Job1 J1, Job2 J2 WHERE J1.PositionName = J2.PositionName GROUP BY J2.JobCategory");
-            echo "<br>Found Number of Jobs grouped by category:<br>";
-            echo "<table>";
-            echo "<tr><th>Job Category</th><th>Number of Jobs in Category</th></tr>";
+            $result= executePlainSQL("SELECT DISTINCT JobCategory FROM Job2");
+             echo "<table>";
+            echo "<tr><th>Job Category</th></tr>";
             while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-                echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] . "</td></tr>"; //or just use "echo $row[0]"
+                echo "<tr><td>" . $row[0] . "</td></tr>"; //or just use "echo $row[0]"
             }
 
             echo "</table>";
+
+            // $result = executePlainSQL("SELECT J2.JobCategory, Count(*) FROM Job1 J1, Job2 J2 WHERE J1.PositionName = J2.PositionName GROUP BY J2.JobCategory");
+            // echo "<br>Found Number of Jobs grouped by category:<br>";
+            // echo "<table>";
+            // echo "<tr><th>Job Category</th><th>Number of Jobs in Category</th></tr>";
+            // while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+            //     echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] . "</td></tr>"; //or just use "echo $row[0]"
+            // }
+
+            // echo "</table>";
 
         }
 
@@ -447,7 +464,7 @@
         function handleGETRequest() {
             if (connectToDB()) {
                 if (array_key_exists('countJobsByType', $_GET)) {
-                    handleCountJobByTypeRequest();
+                    handleCountJobByTypeRequest(); 
                 } else if (array_key_exists('FindEmployersMultEmployees', $_GET)) {
                     handleFindEmplyersMultEmployees();
                 } 
@@ -455,6 +472,18 @@
                 disconnectFromDB();
             }
         }
+
+        function handleDisplayJobCatDropdown() {
+            if (connectToDB()) {
+                $result= executePlainSQL("SELECT DISTINCT JobCategory FROM Job2");
+                while ($row = oci_fetch_array($result, OCI_BOTH))  
+                    { 
+                         echo "<option value=\"JobCategory\">" . $row[0] . "</option>"; 
+                    } 
+                disconnectFromDB();
+            }
+        }
+        
 
 		if (isset($_POST['reset']) || isset($_POST['updateAccountInfoSubmit']) || isset($_POST['insertSubmit']) || isset($_POST['DeleteSubmit'])) {
             handlePOSTRequest();
