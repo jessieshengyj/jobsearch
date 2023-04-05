@@ -133,6 +133,24 @@
 
 
         }
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 70%;
+            margin: auto;
+        }
+
+        .resultTable {
+            overflow: auto;
+            padding-top: 20px;
+            padding-bottom: 40px;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
     </style>
     </head>
     <body>
@@ -173,7 +191,7 @@
                         handleDisplayTables();
                         ?>
                     </select>
-                    <input type="submit" name="FindAttributes" value="Find Attributes">
+                    <input type="submit" name="FindAttributes" value="Find Attributes" class="button">
                 </div>
             </form>
         </div>
@@ -182,9 +200,7 @@
         // start_session();
         // echo $_SESSION['SavedSelectedTable'];
         // echo "AT START";
-        ini_set('display_errors', 1);
-        ini_set('display_startup_errors', 1);
-        error_reporting(E_ALL);
+
 
         $success = True; //keep track of errors so it redirects the page only if there are no errors
         $db_conn = NULL; // edit the login credentials in connectToDB()
@@ -459,14 +475,34 @@
                 $tuple
             );
             $temp = $_POST['selectedTableToView'];
-            // setcookie("cookieSelectedTable", $temp, time() + (86400/24), "/");
-            // $_SESSION['SavedSelectedTable'] =  $temp;
 
-            echo "<h2>Select Column Names tables</h2> \n
+
+        // <div class="main-block">
+        //     <form method="POST" action="applicant_account.php"> <!--refresh page when submitted-->
+        //         <div class="title">
+        //             <h2>Create Account</h2>
+        //         </div>
+        //         <div class="info">
+        //             <input type="hidden" id="insertQueryRequest" name="insertQueryRequest">
+        //             UserID (Number) [Required Field]: <input type="text" name="InsUserID"> <br /><br />
+        //             Name: <input type="text" name="InsName"> <br /><br />
+        //             Email [Required Field]: <input type="text" name="InsEmail"> <br /><br />
+        //             Address: <input type="text" name="InsAddress"> <br /><br />
+        //             Phone Number: <input type="text" name="InsPhoneNumber"> <br /><br />
+        //             <input type="submit" value="Insert" name="insertSubmit" class="button"></p>
+        //         </div>
+        //     </form>
+        // </div>
+
+            echo "<div class=\"main-block\"> \n
             <form action=\"\" method=\"post\"> \n
-                 <input type=\"hidden\" id=\"TableNameLastStep\" name=\"TableNameLastStep\" value =" . $_POST['selectedTableToView'] . "> \n
-                <select name=\"ColumnNames[]\" multiple = \"multiple\"> \n
-                    <option value=\"\" disabled selected>Select Attributes To Include</option>";
+            <div class=\"title\"> \n
+            <h2>Select Column Names tables</h2> \n
+            </div> \n
+            <div class=\"info\"> \n
+            <input type=\"hidden\" id=\"TableNameLastStep\" name=\"TableNameLastStep\" value =" . $_POST['selectedTableToView'] . "> \n
+            <select name=\"ColumnNames[]\" multiple = \"multiple\"> \n
+            <option value=\"\" disabled selected>Select Attributes To Include</option> \n";
                     if (connectToDB()) {
                         $result= executeBoundSQL("select column_name from USER_TAB_COLUMNS WHERE table_name= :bind1",  $alltuples);
 
@@ -478,7 +514,9 @@
                     }
             echo   "</select> \n
                 <input type=\"submit\" name=\"SelectColumnNames\" value=\"Select Attributes\"> \n
-            </form>";
+                </div> \n
+            </form> \n
+            </div>";
         }
 
 
