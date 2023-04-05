@@ -83,7 +83,7 @@
 
         <hr />
 
-        <h2>Count the Number of Jobs by Type</h2>
+        <h2>Count the Number of Jobs by Category</h2>
         <form method="GET" action="backend.php"> <!--refresh page when submitted-->
             <input type="hidden" id="countJobsRequest" name="countJobsRequest">
             <input type="submit" name="countJobsByType"></p>
@@ -106,7 +106,7 @@
         <input type="hidden" id="insertJobRequest" name="insertJobRequest">
         JobID (Number): <input type="text" name="InsJobID"> <br /><br />
         Application Deadline (yyyy--mm--dd): <input type="text" name="InsJobDeadline"> <br /><br />
-        Remote (yes, no, or hybrid): <input type="text" name="InsJobRemote"> <br /><br />
+        Remote (yes or no): <input type="text" name="InsJobRemote"> <br /><br />
         PositionName: <input type="text" name="InsJobPosName"> <br /><br />
         StartDate (yyyy--mm--dd): <input type="text" name="InsJobStartDate"> <br /><br />
         CompanyID (Number) : <input type="text" name="InsJobCompID"> <br /><br />
@@ -114,41 +114,47 @@
         <input type="submit" value="Insert" name="insertSubmit"></p>
     </form>
 
-  <hr />
+    <hr />
+        <h2>Browse Jobs by Category</h2>
+            <form action="backend.php" method="post">
+                <select name="JobCategory">
+                    <option value="" disabled selected>Choose Job Category</option>
+                    <?php 
+                    handleDisplayJobCatDropdown();
+                    ?>   
+                </select>
+                <input type="submit" name="FindJobCatSubmit" value="Find Jobs">
+            </form>
 
-  <h2>Browse Jobs by Category</h2>
+    <hr />
+        <h2>Find Companies hiring for both remote and in person positions</h2>
+            <form method="GET" action="backend.php"> <!--refresh page when submitted-->
+                <input type="hidden" id="employersRemoteInPerson" name="employersRemoteInPerson">
+                <input type="submit" name="FindCompRemoteInPerson"></p>
+            </form>
 
-  <form method="POST" action="backend.php"> <!--refresh page when submitted-->
-        <input type="hidden" id="BrowseJobCatergory" name="BrowseJobCatergory">
-        Job Category: <input type="text" name="BrowseJobCatergory"> <br /><br />
-        <input type="submit" value="Insert" name="insertSubmit"></p>
-    </form>
+    <hr />
+        <h2>Find job sector with the highest average salary in current job postings</h2>
+            <form method="GET" action="backend.php"> <!--refresh page when submitted-->
+                <input type="hidden" id="catWithHighestAvgSal" name="catWithHighestAvgSal">
+                <input type="submit" name="findCatWithHighestAvgSal"></p>
+            </form>
 
 
+    <hr />
 
+        <h2>Find all jobs for a company</h2>
 
-<!-- 
-  <form method="POST" action="backend.php"> 
-    <input type="hidden" id="browseJobs" name="browseJobCategories">
-
-
-        <label for="JobCategory">Choose a Job Category:</label>
-        <select name="JobCategory" id="JobCategory">
-            
-        <option value="">--- Choose a Job Category ---</option>
-        <?php 
-        //  $stid= executePlainSQL("SELECT DISTINCT JobCategory FROM Job2");
-        // while ($row = oci_fetch_array($stid, OCI_BOTH))  
-        // { 
-        // echo "<option value=\"JobCategory\">" . $row['JobCategory'] . "</option>"; 
-        // } 
-        ?>   
-        </select>
-     <button type="submit">Select</button>
-</form> -->
-
+            <form method="POST" action="backend.php"> <!--refresh page when submitted-->
+                <input type="hidden" id="joinAllJobsFoCompany" name="joinAllJobsFoCompany">
+                CompanyID: <input type="text" name="joinCompID"> <br /><br />
+                <input type="submit" value="Find" name="insertSubmit"></p>
+            </form>
 
         <?php
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL);
 		//this tells the system that it's no longer just parsing html; it's now parsing PHP
 
         $success = True; //keep track of errors so it redirects the page only if there are no errors
@@ -221,14 +227,19 @@
                     $success = False;
                 }
             }
+            return $statement;
         }
 
         function printBrowseJobs($result) { //prints results from a select statement
+            // print_r($result);
             echo "<br>Retrieved data from table demoTable:<br>";
             echo "<table>";
             echo "<tr><th>Job ID</th><th>Position Name</th><th>Job Category</th><th>Job is Remote</th><th>Job Start Date</th><th>Application Deadline</th><th>Company ID</th></tr>";
+            // echo "<tr><th>TestHeader</th></tr>";
+            
             while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-                echo "<tr><td>" . $row["J1.JobID"] . "</td><td>" . $row["J1.PositionName,"] . "</td><td>" . $row["J2.JobCategory,"] . "</td><td>" . $row["J1.Remote,"] . "</td><td>" . $row["J1.StartDate,"] . "</td><td>" . $row["J1.ApplicationDeadline,"] . "</td><td>" . $row["J1.CompanyID,"] . "</td></tr>"; //or just use "echo $row[0]"
+                echo "<tr><td>" . $row["JOBID"] . "</td><td>" . $row["POSITIONNAME"] . "</td><td>" . $row["JOBCATEGORY"] . "</td><td>" . $row["REMOTE"] . "</td><td>" . $row["STARTDATE"] . "</td><td>" . $row["APPLICATIONDEADLINE"] . "</td><td>" . $row["COMPANYID"] . "</td></tr>"; //or just use "echo $row[0]"
+                // echo "<tr><td>test</td></tr>"; //or just use "echo $row[0]"
             }
 
             echo "</table>";
@@ -369,7 +380,7 @@
                 $tuple
             );
 
-            executeBoundSQL("delete from Company where CompanyID = :bind1:", $alltuples);
+            executeBoundSQL("delete from Company where CompanyID = :bind1", $alltuples);
             OCICommit($db_conn);
         }
 
@@ -378,15 +389,37 @@
 
             //Getting the values from user and insert data into the table
             $tuple = array (
-                ":bind1" => $_POST['BrowseJobCatergory'],
+                ":bind1" => $_POST['JobCategory'],
+            );
+            $alltuples = array (
+                $tuple
+            );
+            // echo "<h2>" . $_POST['JobCategory'] . "</h2>";
+            $result = executeBoundSQL("select J1.JobID, J1.PositionName, J2.JobCategory, J1.Remote, J1.StartDate, J1.ApplicationDeadline, J1.CompanyID from Job1 J1, Job2 J2 where J2.JobCategory = :bind1 AND J1.PositionName = J2.PositionName ", $alltuples);
+
+            printBrowseJobs($result);
+        }
+
+        function handleJoinCompJobs() {
+            global $db_conn;
+
+            //Getting the values from user and insert data into the table
+            $tuple = array (
+                ":bind1" => $_POST['joinCompID'],
             );
             $alltuples = array (
                 $tuple
             );
 
-            $result = executeBoundSQL("select J1.JobID, J1.PositionName, J2.JobCategory, J1.Remote, J1.StartDate, J1.ApplicationDeadline, J1.CompanyID, from Job1 J1, Job2 J2 where J2.JobCategory = :bind1: AND J1.PositionName = J2.PositionName ", $alltuples);
-            OCICommit($db_conn);
-            printBrowseJobs($result);
+            $result  = executeBoundSQL("SELECT J1.JobID, J2.JobCategory, J1.positionName, C.name FROM Job1 J1, Job2 J2, Company C WHERE C.CompanyID = J1.CompanyID AND J1.PositionName = J2.positionName AND C.CompanyID = :bind1", $alltuples);
+            echo "<br>All jobs for the company: " . OCI_Fetch_Array($result, OCI_BOTH)[3] . "<br>";
+            echo "<table>";
+            echo "<tr><th>Job ID</th><th>Job Category</th><th>Position Name</th></tr>";
+            while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+                echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] . "</td><td>" . $row[2] . "</td></tr>"; //or just use "echo $row[0]"
+            }
+
+            echo "</table>";
         }
         // HANDLE ALL POST ROUTES
 	// A better coding practice is to have one method that reroutes your requests accordingly. It will make it easier to add/remove functionality.
@@ -404,18 +437,19 @@
                     handleInsertCompanyRequest();
                 }  else if (array_key_exists('deleteCompanyRequest', $_POST)) {
                     handleDeleteCompanyRequest();
-                } else if (array_key_exists('browseJobCategories', $_POST)) {
+                } else if (array_key_exists('JobCategory', $_POST)) {
                     handleBrowseJobCategoriesRequest();
-                } 
+                }  else if (array_key_exists('joinAllJobsFoCompany', $_POST)) {
+                    handleJoinCompJobs();
+                }
 
                 disconnectFromDB();
             }
         }
 
 
-        function handleCountRequest() {
+        function handleCountJobByTypeRequest() {
             global $db_conn;
-
             $result = executePlainSQL("SELECT J2.JobCategory, Count(*) FROM Job1 J1, Job2 J2 WHERE J1.PositionName = J2.PositionName GROUP BY J2.JobCategory");
             echo "<br>Found Number of Jobs grouped by category:<br>";
             echo "<table>";
@@ -442,23 +476,59 @@
             echo "</table>";
 
         }
+
+        function handleFindCompRemoteInPerson() {
+            $result = executePlainSQL("SELECT c1.CompanyID, c1.Name FROM Company c1 WHERE NOT EXISTS ((SELECT j1.Remote FROM  job1 j1) MINUS  (SELECT j2.Remote FROM Company c2, Job1 j2 WHERE c2.companyID = j2.companyID AND c1.companyID = c2.companyID))");
+            echo "<br>Found Companies hiring for both in person and remote jobs:<br>";
+            echo "<table>";
+            echo "<tr><th>Company ID</th><th>Company Name</th></tr>";
+            while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+                echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] . "</td></tr>"; //or just use "echo $row[0]"
+            }
+
+            echo "</table>";
+        }
+
+        function handleFindCatWithHighestAverageSalary() {
+            $result = executePlainSQL("SELECT JobCategory, avg(salary) FROM FullTimeJob f, Job1 j1, Job2 j2 WHERE  f.jobID = j1.jobID AND j1.positionName = j2.positionName GROUP BY j2.JobCategory HAVING avg(salary) >= ALL (SELECT avg(salary) FROM FullTimeJob f2, Job1 j3, Job2 j4 WHERE  f2.jobID = j3.jobID AND j3.positionName =  j4.positionName GROUP BY j4.JobCategory)");
+            echo "<br>The job sector with the highest average salary in current job postings is: " . OCI_Fetch_Array($result, OCI_BOTH)[0]. "<br>";
+            
+        }
         // HANDLE ALL GET ROUTES
 	// A better coding practice is to have one method that reroutes your requests accordingly. It will make it easier to add/remove functionality.
         function handleGETRequest() {
             if (connectToDB()) {
                 if (array_key_exists('countJobsByType', $_GET)) {
-                    handleCountJobByTypeRequest();
+                    handleCountJobByTypeRequest(); 
                 } else if (array_key_exists('FindEmployersMultEmployees', $_GET)) {
                     handleFindEmplyersMultEmployees();
+                }  else if (array_key_exists('FindCompRemoteInPerson', $_GET)) {
+                    handleFindCompRemoteInPerson();
+                }  else if (array_key_exists('findCatWithHighestAvgSal', $_GET)) {
+                    handleFindCatWithHighestAverageSalary();
                 } 
 
                 disconnectFromDB();
             }
         }
 
-		if (isset($_POST['reset']) || isset($_POST['updateAccountInfoSubmit']) || isset($_POST['insertSubmit']) || isset($_POST['DeleteSubmit'])) {
+        function handleDisplayJobCatDropdown() {
+            if (connectToDB()) {
+                $result= executePlainSQL("SELECT DISTINCT JobCategory FROM Job2");
+                while ($row = oci_fetch_array($result, OCI_BOTH))  
+                    { 
+                         echo "<option value= ". $row[0] . ">" . $row[0] . "</option>"; 
+                    } 
+                disconnectFromDB();
+            }
+        }
+        
+
+		if (isset($_POST['reset']) || isset($_POST['updateAccountInfoSubmit']) || isset($_POST['insertSubmit']) || isset($_POST['DeleteSubmit']) 
+            || isset($_POST['FindJobCatSubmit'])) {
             handlePOSTRequest();
-        } else if (isset($_GET['countJobsRequest']) || isset($_GET['employersMultipleEmployees'])) {
+        } else if (isset($_GET['countJobsRequest']) || isset($_GET['employersMultipleEmployees']) || isset($_GET['employersRemoteInPerson']) ||
+        isset($_GET['catWithHighestAvgSal'])) {
             handleGETRequest();
         }
 		?>
