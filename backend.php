@@ -84,6 +84,7 @@
         <hr />
 
         <h2>Count the Number of Jobs by Category</h2>
+        <h2>Count the Number of Jobs by Category</h2>
         <form method="GET" action="backend.php"> <!--refresh page when submitted-->
             <input type="hidden" id="countJobsRequest" name="countJobsRequest">
             <input type="submit" name="countJobsByType"></p>
@@ -455,10 +456,20 @@
             echo "<table>";
             echo "<tr><th>Job Category</th><th>Number of Jobs in Category</th></tr>";
             while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-                echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] . "</td></tr>"; //or just use "echo $row[0]"
+                echo "<tr><td>" . $row[0] . "</td></tr>"; //or just use "echo $row[0]"
             }
 
             echo "</table>";
+
+            // $result = executePlainSQL("SELECT J2.JobCategory, Count(*) FROM Job1 J1, Job2 J2 WHERE J1.PositionName = J2.PositionName GROUP BY J2.JobCategory");
+            // echo "<br>Found Number of Jobs grouped by category:<br>";
+            // echo "<table>";
+            // echo "<tr><th>Job Category</th><th>Number of Jobs in Category</th></tr>";
+            // while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+            //     echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] . "</td></tr>"; //or just use "echo $row[0]"
+            // }
+
+            // echo "</table>";
 
         }
 
