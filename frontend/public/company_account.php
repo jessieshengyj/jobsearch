@@ -161,7 +161,7 @@
     </body>
 
     <body>
-        <div class="main-block">
+        <div class="main-block", style="padding-top: 170px">
             <form method="POST" action="company_account.php"> <!--refresh page when submitted-->
                 <div class="title">
                     <h2>Create a Company</h2>
