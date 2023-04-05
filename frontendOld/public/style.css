@@ -24,7 +24,7 @@ img {
 .navbar {
     width: 100%;
     position: fixed;
-    overflow: visible;
+    overflow: hidden;
     background-color: white;
 }
 
@@ -96,22 +96,21 @@ img {
 
 /*https://freefrontend.com/css-text-effects/*/
 .titleText {
-    font-size: 150px;
+    font-size: 70px;
     text-transform: uppercase;
-    font-family:Arial, Helvetica, sans-serif;
+    font-family: 'Gambetta', serif;
     letter-spacing: -3px;
     transition: 700ms ease;
     font-variation-settings: "wght" 311;
     color: white;
     outline: none;
     text-align: center;
-    padding-top: 200px;
-    text-shadow: 2px 2px 50px rgb(20, 18, 32);
+    padding-top: 110px;
 }
 
 .titleText:hover {
     font-variation-settings: "wght" 582;
-    letter-spacing: 20px;
+    letter-spacing: 8px;
 }
 
 .slideshow_container {
@@ -168,10 +167,9 @@ img {
     padding-bottom: 210px;
 }
 
-
 .center{
     position:absolute;
-    top:70%;
+    top:80%;
     left:50%;
     transform:perspective(500px) translate(-50%,-50%);
     transform:skewY(15deg);
@@ -197,10 +195,11 @@ img {
     transform-style:preserve-3d;
     transition:0.8s;
 }
-
 .center h1 span:nth-child(1){
     clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
 }
+
+
 
 .center h1 span:nth-child(2){
     color:#5E17EB;
