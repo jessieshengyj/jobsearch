@@ -15,23 +15,16 @@
   Apache server can run it, and you must rename it to have a ".php"
   extension.  You must also change the username and password on the
   OCILogon below to be your ORACLE username and password -->
-
+  <?php
+ 
+ ?>
   <html>
     <head>
         <title>CPSC 304 PHP/Oracle Demonstration</title>
     </head>
 
     <body>
-        <h2>Reset</h2>
-        <p>If you wish to reset the table press on the reset button. If this is the first time you're running this page, you MUST use reset</p>
-
-        <form method="POST" action="backend.php">
-            <!-- if you want another page to load after the button is clicked, you have to specify that page in the action parameter -->
-            <input type="hidden" id="resetTablesRequest" name="resetTablesRequest">
-            <p><input type="submit" value="Reset" name="reset"></p>
-        </form>
-
-        <hr />
+    
 
         <h2>Create Account</h2>
         <form method="POST" action="backend.php"> <!--refresh page when submitted-->
@@ -41,7 +34,7 @@
             Email: <input type="text" name="InsEmail"> <br /><br />
             Address: <input type="text" name="InsAddress"> <br /><br />
             Phone Number: <input type="text" name="InsPhoneNumber"> <br /><br />
-            <input type="submit" value="Insert" name="insertSubmit"></p>
+            <input type="submit" value="Insert" name="createAccount"></p>
         </form>
 
         <hr />
@@ -68,7 +61,7 @@
             CompanyID (number): <input type="text" name="InsCompanyCompanID"> <br /><br />
             Company Name: <input type="text" name="InsCompanyName"> <br /><br />
             NumberOfEmployees: <input type="text" name="InsCompanyNumberOfEmployees"> <br /><br />
-            <input type="submit" value="Insert" name="insertSubmit"></p>
+            <input type="submit" value="Insert" name="createCompany"></p>
         </form>
 
         <hr />
@@ -78,12 +71,11 @@
         <form method="POST" action="backend.php"> <!--refresh page when submitted-->
             <input type="hidden" id="deleteCompanyRequest" name="deleteCompanyRequest">
             CompanyID (number): <input type="text" name="DelCompanyCompanID"> <br /><br />
-            <input type="submit" value="Delete" name="DeleteSubmit"></p>
+            <input type="submit" value="Delete" name="deleteCompany"></p>
         </form>
 
         <hr />
 
-        <h2>Count the Number of Jobs by Category</h2>
         <h2>Count the Number of Jobs by Category</h2>
         <form method="GET" action="backend.php"> <!--refresh page when submitted-->
             <input type="hidden" id="countJobsRequest" name="countJobsRequest">
@@ -112,7 +104,7 @@
         StartDate (yyyy--mm--dd): <input type="text" name="InsJobStartDate"> <br /><br />
         CompanyID (Number) : <input type="text" name="InsJobCompID"> <br /><br />
         Job Catagory: <input type="text" name="InsJobCatagory"> <br /><br />
-        <input type="submit" value="Insert" name="insertSubmit"></p>
+        <input type="submit" value="Insert" name="createJob"></p>
     </form>
 
     <hr />
@@ -126,7 +118,7 @@
                 </select>
                 <input type="submit" name="FindJobCatSubmit" value="Find Jobs">
             </form>
-
+    
     <hr />
         <h2>Find Companies hiring for both remote and in person positions</h2>
             <form method="GET" action="backend.php"> <!--refresh page when submitted-->
@@ -141,7 +133,7 @@
                 <input type="submit" name="findCatWithHighestAvgSal"></p>
             </form>
 
-
+          
     <hr />
 
         <h2>Find all jobs for a company</h2>
@@ -149,19 +141,36 @@
             <form method="POST" action="backend.php"> <!--refresh page when submitted-->
                 <input type="hidden" id="joinAllJobsFoCompany" name="joinAllJobsFoCompany">
                 CompanyID: <input type="text" name="joinCompID"> <br /><br />
-                <input type="submit" value="Find" name="insertSubmit"></p>
+                <input type="submit" value="Find" name="findAllJobaForComp"></p>
             </form>
+            <hr />
+
+        <h2>View tables</h2>
+            <form action="backend.php" method="post">
+                <select name="selectedTableToView">
+                    <option value="" disabled selected>Choose a table to view</option>
+                    <?php 
+                    handleDisplayTables();
+                    ?>   
+                </select>
+                <input type="submit" name="FindAttributes" value="Find Attributes">
+            </form>
+      
 
         <?php
+
+
+        // echo $_SESSION['SavedSelectedTable'];
+        // echo "AT START";
         ini_set('display_errors', 1);
         ini_set('display_startup_errors', 1);
         error_reporting(E_ALL);
-		//this tells the system that it's no longer just parsing html; it's now parsing PHP
-
+       
         $success = True; //keep track of errors so it redirects the page only if there are no errors
         $db_conn = NULL; // edit the login credentials in connectToDB()
         $show_debug_alert_messages = False; // set to True if you want alerts to show you which methods are being triggered (see how it is used in debugAlertMessage())
 
+        $selectedTable = NULL;
         function debugAlertMessage($message) {
             global $show_debug_alert_messages;
 
@@ -218,7 +227,8 @@
                     OCIBindByName($statement, $bind, $val);
                     unset ($val); //make sure you do not remove this. Otherwise $val will remain in an array object wrapper which will not be recognized by Oracle as a proper datatype
 				}
-
+                echo "our statement";
+                echo $statement;
                 $r = OCIExecute($statement, OCI_DEFAULT);
                 if (!$r) {
                     echo "<br>Cannot execute the following command: " . $cmdstr . "<br>";
@@ -406,20 +416,96 @@
 
             //Getting the values from user and insert data into the table
             $tuple = array (
-                ":bind1" => $_POST['joinCompID'],
+                ":bind1" => $_POST['joinCompID']
             );
             $alltuples = array (
                 $tuple
             );
 
             $result  = executeBoundSQL("SELECT J1.JobID, J2.JobCategory, J1.positionName, C.name FROM Job1 J1, Job2 J2, Company C WHERE C.CompanyID = J1.CompanyID AND J1.PositionName = J2.positionName AND C.CompanyID = :bind1", $alltuples);
-            echo "<br>All jobs for the company: " . OCI_Fetch_Array($result, OCI_BOTH)[3] . "<br>";
+            // echo "<br>All jobs for the company: " . OCI_Fetch_Array($result, OCI_BOTH)[3] . "<br>";
             echo "<table>";
-            echo "<tr><th>Job ID</th><th>Job Category</th><th>Position Name</th></tr>";
+            echo "<tr><th>Job ID</th><th>Job Category</th><th>Position Name</th><th>Company Name</th></tr>";
             while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-                echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] . "</td><td>" . $row[2] . "</td></tr>"; //or just use "echo $row[0]"
+                echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] . "</td><td>" . $row[2] . "</td><td>" . $row[3] . "</td></tr>"; //or just use "echo $row[0]"
             }
 
+            echo "</table>";
+        }
+
+        function handleRenderingColumnNamesDropDown() {
+
+            $tuple = array (
+                ":bind1" => $_POST['selectedTableToView']
+            );
+            $alltuples = array (
+                $tuple
+            );
+            $temp = $_POST['selectedTableToView'];
+            // setcookie("cookieSelectedTable", $temp, time() + (86400/24), "/");
+            // $_SESSION['SavedSelectedTable'] =  $temp;
+        
+            echo "<h2>Select Column Names tables</h2> \n
+            <form action=\"\" method=\"post\"> \n
+                 <input type=\"hidden\" id=\"TableNameLastStep\" name=\"TableNameLastStep\">
+                 Table Name: <input type=\"text\" name=\"tableStringLastStep\"> <br /><br />
+                <select name=\"ColumnNames[]\" multiple = \"multiple\"> \n
+                    <option value=\"\" disabled selected>Select Attributes To Include</option>";
+                    if (connectToDB()) {
+                        $result= executeBoundSQL("select column_name from USER_TAB_COLUMNS WHERE table_name= :bind1",  $alltuples);
+                     
+                        while ($row = oci_fetch_array($result, OCI_BOTH))  
+                            { 
+                                 echo "<option value= ". $row[0] . ">" . $row[0] . "</option>"; 
+                            } 
+                        disconnectFromDB();
+                    } 
+            echo   "</select> \n
+                <input type=\"submit\" name=\"SelectColumnNames\" value=\"Select Attributes\"> \n
+            </form>";
+        }
+      
+
+        function handleProcessColumnNames() {
+            $sqlquery = "select ";
+            foreach($_POST['ColumnNames'] as $row) {
+                $sqlquery .= " " . $row . ",";
+            }
+            
+            $sqlquery = rtrim($sqlquery, ", ");
+            echo  $sqlquery;
+            $tableName = $_POST['tableStringLastStep'];
+
+            $tuple = array (
+                ":bind1" => $_POST['tableStringLastStep']
+            );
+            $alltuples = array (
+                $tuple
+            );
+            echo "We here";
+            print_r($tuple);
+            print_r($alltuples);
+            // $sqlquery .=  " FROM :bind1";
+            // $result  = executeBoundSQL($sqlquery, $alltuples); this doesnt work?
+            $result  = executePlainSQL($sqlquery . " FROM " . $tableName);
+            // echo $_SESSION['SavedSelectedTable'];
+            // echo $_COOKIE["cookieSelectedTable"];
+            echo "<table>";
+            echo "<tr>";
+            foreach($_POST['ColumnNames'] as $row) {
+                echo "<th>" . $row . "</th>";
+            }
+            echo "</tr>";
+            while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+                echo "<tr>";
+                $myint = 0;
+                foreach($_POST['ColumnNames'] as $col) {
+                    echo "<td>" . $row[$myint] . "</td>";
+                    $myint += 1;
+                }
+                echo "</tr>";
+
+            }
             echo "</table>";
         }
         // HANDLE ALL POST ROUTES
@@ -442,6 +528,10 @@
                     handleBrowseJobCategoriesRequest();
                 }  else if (array_key_exists('joinAllJobsFoCompany', $_POST)) {
                     handleJoinCompJobs();
+                } else if (array_key_exists('selectedTableToView', $_POST)) {
+                    handleRenderingColumnNamesDropDown();
+                } else if (array_key_exists('ColumnNames', $_POST)) {
+                    handleProcessColumnNames();
                 }
 
                 disconnectFromDB();
@@ -523,6 +613,17 @@
             }
         }
 
+        function handleDisplayTables() {
+            if (connectToDB()) {
+                $result= executePlainSQL("SELECT table_name FROM user_tables");
+                while ($row = oci_fetch_array($result, OCI_BOTH))  
+                    { 
+                         echo "<option value= ". $row[0] . ">" . $row[0] . "</option>"; 
+                    } 
+                disconnectFromDB();
+            }
+        }
+
         function handleDisplayJobCatDropdown() {
             if (connectToDB()) {
                 $result= executePlainSQL("SELECT DISTINCT JobCategory FROM Job2");
@@ -535,11 +636,14 @@
         }
         
 
-		if (isset($_POST['reset']) || isset($_POST['updateAccountInfoSubmit']) || isset($_POST['insertSubmit']) || isset($_POST['DeleteSubmit']) 
-            || isset($_POST['FindJobCatSubmit'])) {
+		if (isset($_POST['reset']) || isset($_POST['updateAccountInfoSubmit']) ||
+            isset($_POST['createAccount']) || isset($_POST['createCompany']) || 
+             isset($_POST['createJob']) || isset($_POST['deleteCompany']) ||
+             isset($_POST['findAllJobaForComp']) || isset($_POST['FindAttributes']) ||
+             isset($_POST['FindAttributes']) || isset($_POST['SelectColumnNames'])) {
             handlePOSTRequest();
-        } else if (isset($_GET['countJobsRequest']) || isset($_GET['employersMultipleEmployees']) || isset($_GET['employersRemoteInPerson']) ||
-        isset($_GET['catWithHighestAvgSal'])) {
+        } else if (isset($_GET['countJobsRequest']) || isset($_GET['employersMultipleEmployees']) ||
+         isset($_GET['employersRemoteInPerson']) || isset($_GET['catWithHighestAvgSal'])) {
             handleGETRequest();
         }
 		?>
