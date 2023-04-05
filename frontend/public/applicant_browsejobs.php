@@ -206,7 +206,6 @@
                     <div class="dropdown-content">
                         <a href="company_account.php">Account</a>
                         <a href="company_postjob.php">Post Job</a>
-                        <a href="company_browseapplicants.php">Browse Jobs</a>
                     </div>
                 </div>
                 <div class="dropdown">
@@ -217,39 +216,52 @@
                         <a href="applicant_browsejobs.php">Browse Jobs</a>
                     </div>
                 </div>
+                <div class="dropdown">
+                    <button class="dropbtn"> Navigate Page
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="#one">Count Jobs by Category</a>
+                        <a href="#two">Companies Offering Multiple Jobs</a>
+                        <a href="#three">Browse Jobs by Category</a>
+                        <a href="#four">Remote and In Person Companies</a>
+                        <a href="#five">Highest Paying Job Category</a>
+                        <a href="#six">Find All Jobs for a Company</a>
+                        <!-- <a href="#result">View Results</a> -->
+                    </div>
+                </div>
             </div>
         </div>
     </body>
 
     <body>
 
-        <div class="main-block">
+        <div class="main-block" id="one">
             <form method="GET" action="applicant_browsejobs.php"> <!--refresh page when submitted-->
                 <div class="title">
                     <h2>Count the Number of Jobs by Category</h2>
                 </div>
                 <div class="info">
                     <input type="hidden" id="countJobsRequest" name="countJobsRequest">
-                    <input type="submit" name="countJobsByType"></p>
+                    <input type="submit" name="countJobsByType" class="button"></p>
                 </div>
             </form>
         </div>
 
 
-        <div class="main-block">
+        <div class="main-block" id="two">
             <form method="GET" action="applicant_browsejobs.php"> <!--refresh page when submitted-->
                 <div class="title">
                     <h2>All employers looking for multiple employees</h2>
                 </div>
                 <div class="info">
                     <input type="hidden" id="employersMultipleEmployees" name="employersMultipleEmployees">
-                    <input type="submit" name="FindEmployersMultEmployees"></p>
+                    <input type="submit" name="FindEmployersMultEmployees" class="button"></p>
                 </div>
             </form>
         </div>
 
 
-        <div class="main-block">
+        <div class="main-block" id="three">
             <form action="applicant_browsejobs.php" method="post">
                 <div class="title">
                     <h2>Browse Jobs by Category</h2>
@@ -261,38 +273,38 @@
                     handleDisplayJobCatDropdown();
                     ?>
                 </select>
-                <input type="submit" name="FindJobCatSubmit" value="Find Jobs">
+                <input type="submit" name="FindJobCatSubmit" value="Find Jobs" class="button">
                 </div>
             </form>
         </div>
 
-        <div class="main-block">
+        <div class="main-block" id="four">
             <form method="GET" action="applicant_browsejobs.php"> <!--refresh page when submitted-->
                 <div class="title">
                     <h2>Find Companies hiring for both remote and in person positions</h2>
                 </div>
                 <div class="info">
                     <input type="hidden" id="employersRemoteInPerson" name="employersRemoteInPerson">
-                    <input type="submit" name="FindCompRemoteInPerson"></p>
+                    <input type="submit" name="FindCompRemoteInPerson" class="button"></p>
                 </div>
             </form>
         </div>
 
 
-        <div class="main-block">
+        <div class="main-block" id="five">
             <form method="GET" action="applicant_browsejobs.php"> <!--refresh page when submitted-->
                 <div class="title">
                     <h2>Find job sector with the highest average salary in current job postings</h2>
                 </div>
                 <div class="info">
                     <input type="hidden" id="catWithHighestAvgSal" name="catWithHighestAvgSal">
-                    <input type="submit" name="findCatWithHighestAvgSal"></p>
+                    <input type="submit" name="findCatWithHighestAvgSal" class="button"></p>
                 </div>
             </form>
         </div>
 
 
-        <div class="main-block">
+        <div class="main-block" id="six">
             <form method="POST" action="applicant_browsejobs.php"> <!--refresh page when submitted-->
                 <div class="title">
                     <h2>Find all jobs for a company</h2>
@@ -300,12 +312,10 @@
                 <div class="info">
                     <input type="hidden" id="joinAllJobsFoCompany" name="joinAllJobsFoCompany">
                     CompanyID: <input type="text" name="joinCompID"> <br /><br />
-                    <input type="submit" value="Find" name="insertSubmit"></p>
+                    <input type="submit" value="Find" name="insertSubmit" class="button"></p>
                 </div>
             </form>
         </div>
-
-
 
 
 
@@ -394,7 +404,7 @@
 
             // Your username is ora_(CWL_ID) and the password is a(student number). For example,
 			// ora_platypus is the username and a12345678 is the password.
-            $db_conn = OCILogon("ora_lilyuzhe", "a86004801", "dbhost.students.cs.ubc.ca:1522/stu");
+            $db_conn = OCILogon("ora_", "a", "dbhost.students.cs.ubc.ca:1522/stu");
 
             if ($db_conn) {
                 debugAlertMessage("Database is Connected");

@@ -145,7 +145,6 @@
                     <div class="dropdown-content">
                         <a href="company_account.php">Account</a>
                         <a href="company_postjob.php">Post Job</a>
-                        <a href="company_browseapplicants.php">Browse Jobs</a>
                     </div>
                 </div>
                 <div class="dropdown">
@@ -171,7 +170,7 @@
                     CompanyID (number): <input type="text" name="InsCompanyCompanID"> <br /><br />
                     Company Name: <input type="text" name="InsCompanyName"> <br /><br />
                     NumberOfEmployees: <input type="text" name="InsCompanyNumberOfEmployees"> <br /><br />
-                    <input type="submit" value="Insert" name="insertSubmit"></p>
+                    <input type="submit" value="Insert" name="insertSubmit" class="button"></p>
                 </div>
             </form>
         </div>
@@ -184,7 +183,7 @@
                 <div class="info">
                     <input type="hidden" id="deleteCompanyRequest" name="deleteCompanyRequest">
                     CompanyID (number): <input type="text" name="DelCompanyCompanID"> <br /><br />
-                    <input type="submit" value="Delete" name="DeleteSubmit"></p>
+                    <input type="submit" value="Delete" name="DeleteSubmit" class="button"></p>
                 </div>
             </form>
         </div>
@@ -288,7 +287,7 @@
 
             // Your username is ora_(CWL_ID) and the password is a(student number). For example,
 			// ora_platypus is the username and a12345678 is the password.
-            $db_conn = OCILogon("ora_lilyuzhe", "a86004801", "dbhost.students.cs.ubc.ca:1522/stu");
+            $db_conn = OCILogon("ora_", "a", "dbhost.students.cs.ubc.ca:1522/stu");
 
             if ($db_conn) {
                 debugAlertMessage("Database is Connected");

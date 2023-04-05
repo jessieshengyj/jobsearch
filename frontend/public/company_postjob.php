@@ -18,122 +18,14 @@
 
   <html>
     <head>
-        <title>Manage Applicant Account</title>
+        <title>Post Job</title>
         <style>
             <?php include 'style.css'; ?>
-            <?php include 'images/favico.ico'; ?>
+            <?php include 'images/favicon.ico'; ?>
         /* <link rel="stylesheet" type='text/css' href="style.php" /> */
-        html, body {
-            background: linear-gradient(100grad, #937ea2, #1f2560);
-        }
-
-        body, div, form, input, select, p {
-            font-family: Roboto, Arial, sans-serif;
-            font-size: 16px;
-            color: #eee;
-        }
-
-        body {
-            margin: 0;
-            font-family: Helvetica, serif;
-            background-size: cover;
-        }
-
-        h1, h2 {
-            text-transform: uppercase;
-            font-weight: 400;
-        }
-
-        h2 {
-            margin: 0 0 0 5px;
-        }
-        .main-block {
-            padding-top: 100px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-            padding: 25px;
-            background: rgba(0, 0, 0, 0);
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-
-        }
-
-        form {
-            padding: 25px;
-            padding-bottom: 0px;
-        }
-
-        form {
-            background: rgba(0,0,0,0.5);
-            border-radius: 15px;
-        }
-
-        .title {
-            display: flex;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-
-        .info {
-            display: flex;
-            flex-direction: column;
-        }
-
-        input, select {
-            padding: 5px;
-            margin-bottom: 30px;
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid #eee;
-        }
-
-        input::placeholder {
-            color: #eee;
-        }
-
-        button {
-            padding: 10px 5px;
-            /*border-radius: 5px;*/
-            background: #26a9e0;
-            font-size: 15px;
-            font-weight: 400;
-            color: #fff;
-            border: none;
-        }
-
-        button {
-            width: 100%;
-        }
-        button:hover {
-            background: #85d6de;
-        }
-        @media (min-width: 568px) {
-            html, body {
-                height: 100%;
-            }
-
-            .main-block {
-                flex-direction: row;
-                height: calc(100% - 50px);
-            }
-
-            form {
-                flex: 1;
-                height: auto;
-            }
-
-            .navbar_container{
-                padding-bottom: 50px;
-            }
-
-
-        }
-    </style>
+        </style>
     </head>
+
     <body>
         <div class="navbar_container">
             <div class="navbar">
@@ -145,7 +37,6 @@
                     <div class="dropdown-content">
                         <a href="company_account.php">Account</a>
                         <a href="company_postjob.php">Post Job</a>
-                        <a href="company_browseapplicants.php">Browse Jobs</a>
                     </div>
                 </div>
                 <div class="dropdown">
@@ -160,40 +51,33 @@
         </div>
     </body>
 
-    <body>
-        <div class="main-block">
-            <form method="POST" action="applicant_account.php"> <!--refresh page when submitted-->
-                <div class="title">
-                    <h2>Create Account</h2>
-                </div>
-                <div class="info">
-                    <input type="hidden" id="insertQueryRequest" name="insertQueryRequest">
-                    UserID (Number): <input type="text" name="InsUserID"> <br /><br />
-                    Name: <input type="text" name="InsName"> <br /><br />
-                    Email: <input type="text" name="InsEmail"> <br /><br />
-                    Address: <input type="text" name="InsAddress"> <br /><br />
-                    Phone Number: <input type="text" name="InsPhoneNumber"> <br /><br />
-                    <input type="submit" value="Insert" name="insertSubmit"></p>
-                </div>
-            </form>
-        </div>
+    <body style="background: linear-gradient(100grad, #bda7cb, #6f7ca2)">
+        <div class="main_company_postjob" style="padding-bottom: 100px; padding-top: 30px">
+            <div class="form" style="text-align: center" id="FullTime">
+                <form class="job_form" method="POST" action="postjob.php">
+                <h1>Post a New Job</h1>
+                <fieldset><br>
+                <legend>Job Info</legend>
 
-        <div class="main-block">
-            <form method="POST" action="applicant_account.php"> <!--refresh page when submitted-->
-                <div class="title">
-                    <h2>Update Account Information</h2>
-                </div>
-                <div class="info">
-                    <input type="hidden" id="updateQueryRequest" name="updateQueryRequest">
-                    UserID: <input type="text" name="UpdUserID"> <br /><br />
-                    Name: <input type="text" name="newName"> <br /><br />
-                    Email Address: <input type="text" name="UpdEmail"> <br /><br />
-                    Address: <input type="text" name="UpdAddress"> <br /><br />
-                    Phone Numer: <input type="text" name="UpdPhoneNumber"> <br /><br />
-                    <input type="submit" value="Update" name="updateAccountInfoSubmit"></p>
-                </div>
-            </form>
+                <input type="hidden" id="insertJobRequest" name="insertJobRequest">
+                Job ID (Number): <input type="text" name="InsJobID"> <br /><br />
+                Application Deadline (yyyy--mm--dd): <input type="text" name="InsJobDeadline"> <br /><br />
+                Remote (yes/no): <input type="text" name="InsJobRemote"> <br /><br />
+                Position Name: <input type="text" name="InsJobPosName"> <br /><br />
+                Start Date (yyyy--mm--dd): <input type="text" name="InsJobStartDate"> <br /><br />
+                Company ID (Number) : <input type="text" name="InsJobCompID"> <br /><br />
+                Job Category: <input type="text" name="InsJobCatagory"> <br /><br />
+
+                </fieldset><br>
+                <input class="button" type="submit" value="Insert" name="insertSubmit"></p>
+                <!-- <input class="button" type="submit" value="Submit" name="fulltimeSubmit"><br> -->
+                </form>
+            </div>
         </div>
+    </body>
+
+    <body>
+
 
         <?php
         ini_set('display_errors', 1);
@@ -294,7 +178,7 @@
 
             // Your username is ora_(CWL_ID) and the password is a(student number). For example,
 			// ora_platypus is the username and a12345678 is the password.
-            $db_conn = OCILogon("ora_lilyuzhe", "a86004801", "dbhost.students.cs.ubc.ca:1522/stu");
+            $db_conn = OCILogon("ora_", "a", "dbhost.students.cs.ubc.ca:1522/stu");
 
             if ($db_conn) {
                 debugAlertMessage("Database is Connected");
@@ -471,15 +355,24 @@
         function handleCountJobByTypeRequest() {
             global $db_conn;
 
-            $result = executePlainSQL("SELECT J2.JobCategory, Count(*) FROM Job1 J1, Job2 J2 WHERE J1.PositionName = J2.PositionName GROUP BY J2.JobCategory");
-            echo "<br>Found Number of Jobs grouped by category:<br>";
-            echo "<table>";
-            echo "<tr><th>Job Category</th><th>Number of Jobs in Category</th></tr>";
+            $result= executePlainSQL("SELECT DISTINCT JobCategory FROM Job2");
+             echo "<table>";
+            echo "<tr><th>Job Category</th></tr>";
             while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-                echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] . "</td></tr>"; //or just use "echo $row[0]"
+                echo "<tr><td>" . $row[0] . "</td></tr>"; //or just use "echo $row[0]"
             }
 
             echo "</table>";
+
+            // $result = executePlainSQL("SELECT J2.JobCategory, Count(*) FROM Job1 J1, Job2 J2 WHERE J1.PositionName = J2.PositionName GROUP BY J2.JobCategory");
+            // echo "<br>Found Number of Jobs grouped by category:<br>";
+            // echo "<table>";
+            // echo "<tr><th>Job Category</th><th>Number of Jobs in Category</th></tr>";
+            // while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+            //     echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] . "</td></tr>"; //or just use "echo $row[0]"
+            // }
+
+            // echo "</table>";
 
         }
 
