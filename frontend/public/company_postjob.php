@@ -54,22 +54,22 @@
     <body style="background: linear-gradient(100grad, #bda7cb, #6f7ca2)">
         <div class="main_company_postjob" style="padding-bottom: 100px; padding-top: 30px">
             <div class="form" style="text-align: center" id="FullTime">
-                <form class="job_form" method="POST" action="postjob.php">
+                <form class="job_form" method="POST" action="company_postjob.php">
                 <h1>Post a New Job</h1>
                 <fieldset><br>
                 <legend>Job Info</legend>
 
                 <input type="hidden" id="insertJobRequest" name="insertJobRequest">
-                Job ID (Number): <input type="text" name="InsJobID"> <br /><br />
+                Job ID (Number) [Required Field]: <input type="text" name="InsJobID"> <br /><br />
                 Application Deadline (yyyy--mm--dd): <input type="text" name="InsJobDeadline"> <br /><br />
                 Remote (yes/no): <input type="text" name="InsJobRemote"> <br /><br />
                 Position Name: <input type="text" name="InsJobPosName"> <br /><br />
                 Start Date (yyyy--mm--dd): <input type="text" name="InsJobStartDate"> <br /><br />
-                Company ID (Number) : <input type="text" name="InsJobCompID"> <br /><br />
+                Company ID (Number) [Required Field]: <input type="text" name="InsJobCompID"> <br /><br />
                 Job Category: <input type="text" name="InsJobCatagory"> <br /><br />
 
                 </fieldset><br>
-                <input class="button" type="submit" value="Insert" name="insertSubmit"></p>
+                <input class="button" type="submit" value="Post" name="insertSubmit"></p>
                 <!-- <input class="button" type="submit" value="Submit" name="fulltimeSubmit"><br> -->
                 </form>
             </div>
@@ -80,9 +80,9 @@
 
 
         <?php
-        ini_set('display_errors', 1);
-        ini_set('display_startup_errors', 1);
-        error_reporting(E_ALL);
+        // ini_set('display_errors', 1);
+        // ini_set('display_startup_errors', 1);
+        // error_reporting(E_ALL);
 		//this tells the system that it's no longer just parsing html; it's now parsing PHP
 
         $success = True; //keep track of errors so it redirects the page only if there are no errors
@@ -115,10 +115,10 @@
             if (!$r) {
                 echo "<br>Cannot execute the following command: " . $cmdstr . "<br>";
                 $e = oci_error($statement); // For OCIExecute errors pass the statementhandle
-                echo htmlentities($e['message']);
+                // echo htmlentities($e['message']);
                 $success = False;
             }
-
+            
 			return $statement;
 		}
 
@@ -148,11 +148,43 @@
 
                 $r = OCIExecute($statement, OCI_DEFAULT);
                 if (!$r) {
-                    echo "<br>Cannot execute the following command: " . $cmdstr . "<br>";
+                    // echo "<br>Cannot execute the following command: " . $cmdstr . "<br>";
                     $e = OCI_Error($statement); // For OCIExecute errors, pass the statementhandle
-                    echo htmlentities($e['message']);
+                    $emessage = $e['message'];
+                    $JobIDNotUnique = "ORA-00001: unique constraint (ORA_DEVR07.SYS_C001878700) violated";
+                    $NullJobID = "ORA-01400: cannot insert NULL into (\"ORA_DEVR07\".\"JOB1\".\"JOBID\")";
+                    $JobCompIDNotNumber = "ORA-01722: invalid number";
+                    $NoSuchCompany = "ORA-02291: integrity constraint (ORA_DEVR07.SYS_C001878701) violated - parent key not found";
+                    $NullJobPosition = "ORA-01400: cannot insert NULL into (\"ORA_DEVR07\".\"JOB2\".\"POSITIONNAME\")";
+                    echo "<br>";    
+                    switch ($emessage) {
+                        case $JobIDNotUnique:
+                            echo "Job post unsuccessful, there is already another job with that ID, please try again with a different ID";
+                            break;
+                        case $NullCompanyID:
+                            echo "Job post unsuccessful, ensure you entered a value for job ID and try again";
+                            break;
+                        case $JobCompIDNotNumber:
+                            echo "Job post unsuccessful, ensure that you entered a number for the Company ID and Job ID, please try again";
+                            break;
+                        case $NoSuchCompany:
+                            echo "Job post unsuccessful, there is no company that goes by that company ID, ensure that the company ID is correct 
+                            and that the company has been created and try again";
+                            break;
+                        case $NullJobPosition:
+                            // echo "Job post unsuccessful, ensure that you enetered a value for position name and try again"; 
+                            break;
+                        default:
+                        echo $e['message']; 
+                        echo "<br>";
+                        echo "An unexpected error has occured, please double check all information and try again";                    
+                    }
                     echo "<br>";
                     $success = False;
+                } else {
+                    echo "<br>";
+                    echo "Job post successfully created";
+                    echo "<br>";
                 }
             }
             return $statement;
@@ -178,7 +210,7 @@
 
             // Your username is ora_(CWL_ID) and the password is a(student number). For example,
 			// ora_platypus is the username and a12345678 is the password.
-            $db_conn = OCILogon("ora_", "a", "dbhost.students.cs.ubc.ca:1522/stu");
+            $db_conn = OCILogon("ora_devr07", "a80666621", "dbhost.students.cs.ubc.ca:1522/stu");
 
             if ($db_conn) {
                 debugAlertMessage("Database is Connected");

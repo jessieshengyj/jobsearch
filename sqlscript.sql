@@ -200,7 +200,10 @@ INSERT INTO Company VALUES (2, 'Aritzia', 6569);
 INSERT INTO Company VALUES (3, 'PepsiCo', 315000);
 INSERT INTO Company VALUES (4, 'Apple', 164000);
 INSERT INTO Company VALUES (5, 'SAP', 111961);
-
+INSERT INTO Company VALUES (6, 'Coke', 10900);
+INSERT INTO Company VALUES (7, 'TD', 1456);
+INSERT INTO Company VALUES (8, 'UBC', 1200);
+INSERT INTO Company VALUES (9, 'Tom Ford', 200);
 
 INSERT INTO Job1 VALUES (1, '2023-05-23', 'no', 'Salesmen', '2023-09-01', 3);
 INSERT INTO Job1 VALUES (2, '2023-06-15', 'yes', 'Software Engineer', '2023-09-01', 1);
@@ -216,30 +219,38 @@ INSERT INTO Job1 VALUES (11, '2023-09-30', 'yes', 'Data Analyst', '2024-01-01', 
 INSERT INTO Job1 VALUES (12, '2023-10-15', 'no', 'Legal Assistant', '2023-12-01', 2);
 INSERT INTO Job1 VALUES (13, '2023-10-31', 'yes', 'Product Manager', '2024-01-15', 3);
 INSERT INTO Job1 VALUES (14, '2023-11-15', 'no', 'Sales Representative', '2024-02-01', 4);
-INSERT INTO Job1 VALUES (15, '2023-12-01', 'yes', 'Software Developer', '2024-03-01', 5);
+INSERT INTO Job1 VALUES (15, '2023-12-01', 'yes', 'Software Developer', '2024-02-01', 5);
+INSERT INTO Job1 VALUES (16, '2023-11-21', 'yes', 'Legal Assistantr', '2024-07-01', 6);
+INSERT INTO Job1 VALUES (17, '2022-10-21', 'yes', 'Software Developer', '2024-03-04', 6);
+INSERT INTO Job1 VALUES (18, '2023-10-31', 'no', 'Software Developer', '2024-03-01', 7);
+INSERT INTO Job1 VALUES (19, '2023-11-11', 'no', 'Sales Representative', '2023-03-21', 8);
 
 INSERT INTO Job2 VALUES ('Salesmen', 'Sales');
-INSERT INTO Job2 VALUES ('Software Engineer', 'Information Technology');
+INSERT INTO Job2 VALUES ('Software Engineer', 'IT');
 INSERT INTO Job2 VALUES ('Marketing Manager', 'Marketing');
-INSERT INTO Job2 VALUES ('Graphic Designer', 'Arts and Design');
-INSERT INTO Job2 VALUES ('Customer Support Representative', 'Customer Service');
+INSERT INTO Job2 VALUES ('Graphic Designer', 'Design');
+INSERT INTO Job2 VALUES ('Customer Support Representative', 'CustomerService');
 INSERT INTO Job2 VALUES ('Accountant', 'Finance');
 
-INSERT INTO Job2 VALUES ('Web Developer', 'Information Technology');
-INSERT INTO Job2 VALUES ('Human Resources Manager', 'Human Resources');
+INSERT INTO Job2 VALUES ('Web Developer', 'IT');
+INSERT INTO Job2 VALUES ('Human Resources Manager', 'HR');
 INSERT INTO Job2 VALUES ('Social Media Specialist', 'Marketing');
 INSERT INTO Job2 VALUES ('Office Manager', 'Administration');
-INSERT INTO Job2 VALUES ('Data Analyst', 'Information Technology');
+INSERT INTO Job2 VALUES ('Data Analyst', 'IT');
 INSERT INTO Job2 VALUES ('Legal Assistant', 'Legal');
 INSERT INTO Job2 VALUES ('Product Manager', 'Management');
 INSERT INTO Job2 VALUES ('Sales Representative', 'Sales');
-INSERT INTO Job2 VALUES ('Software Developer', 'Information Technology');
+INSERT INTO Job2 VALUES ('Software Developer', 'IT');
 
 INSERT INTO FullTimeJob VALUES (1, 50000);
 INSERT INTO FullTimeJob VALUES (2, 70000);
 INSERT INTO FullTimeJob VALUES (3, 50000);
 INSERT INTO FullTimeJob VALUES (4, 30000);
 INSERT INTO FullTimeJob VALUES (5, 36000);
+INSERT INTO FullTimeJob VALUES (16, 38000);
+INSERT INTO FullTimeJob VALUES (17, 115000);
+INSERT INTO FullTimeJob VALUES (18, 95000);
+INSERT INTO FullTimeJob VALUES (19, 36000);
 
 INSERT INTO PartTimeJob VALUES (6, 15, 16.50);
 INSERT INTO PartTimeJob VALUES (7, 20, 30);

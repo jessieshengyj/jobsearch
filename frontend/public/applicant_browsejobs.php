@@ -217,7 +217,7 @@
                     </div>
                 </div>
                 <div class="dropdown">
-                    <button class="dropbtn"> Navigate Page
+                    <button class="dropbtn"> Navigate Curent Page
                     </button>
                     <div class="dropdown-content">
                         <a href="#one">Count Jobs by Category</a>
@@ -238,7 +238,7 @@
         <div class="main-block" id="one">
             <form method="GET" action="applicant_browsejobs.php"> <!--refresh page when submitted-->
                 <div class="title">
-                    <h2>Count the Number of Jobs by Category</h2>
+                    <h2>Show The Number of Jobs per Category</h2>
                 </div>
                 <div class="info">
                     <input type="hidden" id="countJobsRequest" name="countJobsRequest">
@@ -388,11 +388,27 @@
 
                 $r = OCIExecute($statement, OCI_DEFAULT);
                 if (!$r) {
-                    echo "<br>Cannot execute the following command: " . $cmdstr . "<br>";
+                    // echo "<br>Cannot execute the following command: " . $cmdstr . "<br>";
                     $e = OCI_Error($statement); // For OCIExecute errors, pass the statementhandle
-                    echo htmlentities($e['message']);
+                    $emessage = $e['message'];
+                    // echo $emessage;
+                    $UserIDNotNumber = "ORA-01722: invalid number";
+                    echo "<br>";    
+                    switch ($emessage) {
+                        case $UserIDNotNumber:
+                            echo "request unsuccessful, ensure that you entered a number for the Company ID, please try again";
+                            break;
+                        default:
+                        // echo $e['message']; 
+                        echo "<br>";
+                        echo "An unexpected error has occured, please double check all information and try again";                    
+                    }
                     echo "<br>";
                     $success = False;
+                } else {
+                    // echo "<br>";
+                    // echo "Company successfully created/deleted";
+                    // echo "<br>";
                 }
             }
             return $statement;
@@ -404,7 +420,7 @@
 
             // Your username is ora_(CWL_ID) and the password is a(student number). For example,
 			// ora_platypus is the username and a12345678 is the password.
-            $db_conn = OCILogon("ora_", "a", "dbhost.students.cs.ubc.ca:1522/stu");
+            $db_conn = OCILogon("ora_devr07", "a80666621", "dbhost.students.cs.ubc.ca:1522/stu");
 
             if ($db_conn) {
                 debugAlertMessage("Database is Connected");
@@ -584,7 +600,7 @@
             global $db_conn;
 
             $result = executePlainSQL("SELECT C.Name, Count(*) FROM Job1 J1, Company C WHERE J1.CompanyID = C.CompanyID GROUP BY C.Name HAVING Count(*) >= 2");
-            echo "<br>Found Number employers looking for more than 1 employee:<br>";
+            echo "<br>Found employers looking for more than 1 employee:<br>";
             echo "<table>";
             echo "<tr><th>Employer</th><th>Number of employees being hired</th></tr>";
             while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
@@ -637,8 +653,10 @@
 
         function handleFindCatWithHighestAverageSalary() {
             $result = executePlainSQL("SELECT JobCategory, avg(salary) FROM FullTimeJob f, Job1 j1, Job2 j2 WHERE  f.jobID = j1.jobID AND j1.positionName = j2.positionName GROUP BY j2.JobCategory HAVING avg(salary) >= ALL (SELECT avg(salary) FROM FullTimeJob f2, Job1 j3, Job2 j4 WHERE  f2.jobID = j3.jobID AND j3.positionName =  j4.positionName GROUP BY j4.JobCategory)");
-            echo "<br>The job sector with the highest average salary in current job postings is: " . OCI_Fetch_Array($result, OCI_BOTH)[0]. "<br>";
-
+            echo "<h3>The job sector with the highest average salary in current job postings is: " . OCI_Fetch_Array($result, OCI_BOTH)[0]. "</h3>";
+            for ($i = 0; $i < 5; $i++) {
+                echo "<br>";
+            }
         }
 
         function handleBrowseJobCategoriesRequest() {
@@ -684,13 +702,24 @@
 
             $result  = executeBoundSQL("SELECT J1.JobID, J2.JobCategory, J1.PositionName, C.name FROM Job1 J1, Job2 J2, Company C WHERE C.CompanyID = J1.CompanyID AND J1.PositionName = J2.PositionName AND C.CompanyID = :bind1", $alltuples);
             // echo "<br>All jobs for the company: " . OCI_Fetch_Array($result, OCI_BOTH)[3] . "<br>";
-            echo "<table>";
-            echo "<tr><th>Job ID</th><th>Job Category</th><th>Position Name</th></tr>";
-            while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-                echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] . "</td><td>" . $row[2] . "</td></tr>"; //or just use "echo $row[0]"
-            }
+            $numberOfRows = 0;
 
+            echo "<table>";
+            echo "<tr><th>Company Name</th><th>Job ID</th><th>Job Category</th><th>Position Name</th></tr>";
+            while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+                echo "<tr><td>" . $row[3] . "</td><td>" . $row[0] . "</td><td>" . $row[1] . "</td><td>" . $row[2] . "</td></tr>"; //or just use "echo $row[0]"
+                $numberOfRows += 1;
+            }
             echo "</table>";
+
+        //    TODO
+            if ($numberOfRows == 0) {
+                echo "Unable to find any jobs by that company, ensure you entered the correct number for CompanyID, 
+                if you did then there are no job postings by that company at this time";
+            } else {
+                echo "Succesfully found " . $numberOfRows . " jobs";
+            }
+           
         }
 
 

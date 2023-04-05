@@ -241,7 +241,6 @@
 
         function printBrowseJobs($result) { //prints results from a select statement
             // print_r($result);
-            echo "<br>Retrieved data from table demoTable:<br>";
             echo "<table>";
             echo "<tr><th>Job ID</th><th>Position Name</th><th>Job Category</th><th>Job is Remote</th><th>Job Start Date</th><th>Application Deadline</th><th>Company ID</th></tr>";
             // echo "<tr><th>TestHeader</th></tr>";

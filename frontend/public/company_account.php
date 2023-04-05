@@ -167,10 +167,10 @@
                 </div>
                 <div class="info">
                     <input type="hidden" id="insertCompanyRequest" name="insertCompanyRequest">
-                    CompanyID (number): <input type="text" name="InsCompanyCompanID"> <br /><br />
+                    Company ID (number) [Required Field]: <input type="text" name="InsCompanyCompanID"> <br /><br />
                     Company Name: <input type="text" name="InsCompanyName"> <br /><br />
-                    NumberOfEmployees: <input type="text" name="InsCompanyNumberOfEmployees"> <br /><br />
-                    <input type="submit" value="Insert" name="insertSubmit" class="button"></p>
+                    Number of Employees (Number): <input type="text" name="InsCompanyNumberOfEmployees"> <br /><br />
+                    <input type="submit" value="Create" name="insertSubmit" class="button"></p>
                 </div>
             </form>
         </div>
@@ -182,16 +182,16 @@
                 </div>
                 <div class="info">
                     <input type="hidden" id="deleteCompanyRequest" name="deleteCompanyRequest">
-                    CompanyID (number): <input type="text" name="DelCompanyCompanID"> <br /><br />
+                    Company ID (number): <input type="text" name="DelCompanyCompanID"> <br /><br />
                     <input type="submit" value="Delete" name="DeleteSubmit" class="button"></p>
                 </div>
             </form>
         </div>
 
         <?php
-        ini_set('display_errors', 1);
-        ini_set('display_startup_errors', 1);
-        error_reporting(E_ALL);
+        // ini_set('display_errors', 1);
+        // ini_set('display_startup_errors', 1);
+        // error_reporting(E_ALL);
 		//this tells the system that it's no longer just parsing html; it's now parsing PHP
 
         $success = True; //keep track of errors so it redirects the page only if there are no errors
@@ -225,9 +225,8 @@
                 echo "<br>Cannot execute the following command: " . $cmdstr . "<br>";
                 $e = oci_error($statement); // For OCIExecute errors pass the statementhandle
                 echo htmlentities($e['message']);
-                $success = False;
             }
-
+            $success = False;
 			return $statement;
 		}
 
@@ -257,14 +256,37 @@
 
                 $r = OCIExecute($statement, OCI_DEFAULT);
                 if (!$r) {
-                    echo "<br>Cannot execute the following command: " . $cmdstr . "<br>";
+                    // echo "<br>Cannot execute the following command: " . $cmdstr . "<br>";
                     $e = OCI_Error($statement); // For OCIExecute errors, pass the statementhandle
-                    echo htmlentities($e['message']);
+                    $emessage = $e['message'];
+                    $companyIDNotUnique = "ORA-00001: unique constraint (ORA_DEVR07.SYS_C001878699) violated";
+                    $NullCompanyID = "ORA-01400: cannot insert NULL into (\"ORA_DEVR07\".\"COMPANY\".\"COMPANYID\")";
+                    $UserIDNotNumber = "ORA-01722: invalid number";
+                    echo "<br>";    
+                    switch ($emessage) {
+                        case $companyIDNotUnique:
+                            echo "Company Creation unsuccessful, someone else already has that Company ID, please try again with a different ID";
+                            break;
+                        case $NullCompanyID:
+                            echo "Company Creation/Deletion unsuccessful, ensure you entered a value for Company ID and try again";
+                            break;
+                        case $UserIDNotNumber:
+                            echo "Account Creation/Update unsuccessful, ensure that you entered a number for the Company ID and Number of Employees, please try again";
+                            break;
+                        default:
+                        // echo $e['message']; 
+                        echo "<br>";
+                        echo "An unexpected error has occured, please double check all information and try again";                    
+                    }
                     echo "<br>";
                     $success = False;
+                } else {
+                    echo "<br>";
+                    echo "Company successfully created/deleted";
+                    echo "<br>";
                 }
             }
-            return $statement;
+        return $statement;
         }
 
         function printBrowseJobs($result) { //prints results from a select statement
@@ -287,7 +309,7 @@
 
             // Your username is ora_(CWL_ID) and the password is a(student number). For example,
 			// ora_platypus is the username and a12345678 is the password.
-            $db_conn = OCILogon("ora_", "a", "dbhost.students.cs.ubc.ca:1522/stu");
+            $db_conn = OCILogon("ora_devr07", "a80666621", "dbhost.students.cs.ubc.ca:1522/stu");
 
             if ($db_conn) {
                 debugAlertMessage("Database is Connected");

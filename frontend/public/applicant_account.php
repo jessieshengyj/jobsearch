@@ -167,9 +167,9 @@
                 </div>
                 <div class="info">
                     <input type="hidden" id="insertQueryRequest" name="insertQueryRequest">
-                    UserID (Number): <input type="text" name="InsUserID"> <br /><br />
+                    UserID (Number) [Required Field]: <input type="text" name="InsUserID"> <br /><br />
                     Name: <input type="text" name="InsName"> <br /><br />
-                    Email: <input type="text" name="InsEmail"> <br /><br />
+                    Email [Required Field]: <input type="text" name="InsEmail"> <br /><br />
                     Address: <input type="text" name="InsAddress"> <br /><br />
                     Phone Number: <input type="text" name="InsPhoneNumber"> <br /><br />
                     <input type="submit" value="Insert" name="insertSubmit" class="button"></p>
@@ -184,9 +184,9 @@
                 </div>
                 <div class="info">
                     <input type="hidden" id="updateQueryRequest" name="updateQueryRequest">
-                    UserID: <input type="text" name="UpdUserID"> <br /><br />
-                    Name: <input type="text" name="newName"> <br /><br />
-                    Email Address: <input type="text" name="UpdEmail"> <br /><br />
+                    UserID (Number) [Required Field]: <input type="text" name="UpdUserID"> <br /><br />
+                    Name: <input type="text" name="UpdName"> <br /><br />
+                    Email [Required Field]: <input type="text" name="UpdEmail"> <br /><br />
                     Address: <input type="text" name="UpdAddress"> <br /><br />
                     Phone Number: <input type="text" name="UpdPhoneNumber"> <br /><br />
                     <input type="submit" value="Update" name="updateAccountInfoSubmit" class="button"></p>
@@ -195,9 +195,9 @@
         </div>
 
         <?php
-        ini_set('display_errors', 1);
-        ini_set('display_startup_errors', 1);
-        error_reporting(E_ALL);
+        // ini_set('display_errors', 1);
+        // ini_set('display_startup_errors', 1);
+        // error_reporting(E_ALL);
 		//this tells the system that it's no longer just parsing html; it's now parsing PHP
 
         $success = True; //keep track of errors so it redirects the page only if there are no errors
@@ -263,11 +263,46 @@
 
                 $r = OCIExecute($statement, OCI_DEFAULT);
                 if (!$r) {
-                    echo "<br>Cannot execute the following command: " . $cmdstr . "<br>";
+                    // echo "<br>Cannot execute the following command: " . $cmdstr . "<br>";
                     $e = OCI_Error($statement); // For OCIExecute errors, pass the statementhandle
-                    echo htmlentities($e['message']);
+                    // print_r($e['message']);
+                    $emessage = $e['message'];
+                    $userIDNotUnique = "ORA-00001: unique constraint (ORA_DEVR07.SYS_C001878719) violated";
+                    $NullUserID = "ORA-01400: cannot insert NULL into (\"ORA_DEVR07\".\"APPLICANT\".\"USERID\")";
+                    $EmailInUse = "ORA-00001: unique constraint (ORA_DEVR07.SYS_C001878720) violated";
+                    $NullEmail = "ORA-01400: cannot insert NULL into (\"ORA_DEVR07\".\"APPLICANT\".\"EMAIL\")";
+                    $UserIDNotNumber = "ORA-01722: invalid number";
+                    echo "<br>";    
+                switch ($emessage) {
+                    case $userIDNotUnique:
+                        echo "Account Creation/Update unsuccessful, someone else already has that UserID, please try again with a different ID";
+                        break;
+                    case $NullUserID:
+                        echo "Account Creation/Update unsuccessful, ensure you entered a UserID and try again";
+                        break;
+                    case $EmailInUse:
+                        echo "Account Creation/Update unsuccessful, someone is already has an account with that email, please try again with a different email";
+                        break;
+                    case $NullEmail:
+                        echo "Account Creation/Update unsuccessful, ensure you entered an email and try again";
+                        break; 
+                    case $UserIDNotNumber:
+                        echo "Account Creation/Update unsuccessful, ensure that you entered a number for the User ID";
+                        break;
+                    default:
+                    //    echo $e['message']; 
+                       echo "<br>";
+                       echo "An unexpected error has occured, please double check all information and try again";
+                      
+                }
+                
+                    // echo htmlentities($e['message']);
                     echo "<br>";
                     $success = False;
+                } else {
+                    echo "<br>";
+                    echo "Account successfully created/updated";
+                    echo "<br>";
                 }
             }
             return $statement;
@@ -293,7 +328,7 @@
 
             // Your username is ora_(CWL_ID) and the password is a(student number). For example,
 			// ora_platypus is the username and a12345678 is the password.
-            $db_conn = OCILogon("ora_", "a", "dbhost.students.cs.ubc.ca:1522/stu");
+            $db_conn = OCILogon("ora_devr07", "a80666621", "dbhost.students.cs.ubc.ca:1522/stu");
 
             if ($db_conn) {
                 debugAlertMessage("Database is Connected");
