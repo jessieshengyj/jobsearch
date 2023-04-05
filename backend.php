@@ -159,12 +159,12 @@
 
         <?php
 
-
+        // start_session();
         // echo $_SESSION['SavedSelectedTable'];
         // echo "AT START";
-        // ini_set('display_errors', 1);
-        // ini_set('display_startup_errors', 1);
-        // error_reporting(E_ALL);
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL);
        
         $success = True; //keep track of errors so it redirects the page only if there are no errors
         $db_conn = NULL; // edit the login credentials in connectToDB()
@@ -444,8 +444,7 @@
         
             echo "<h2>Select Column Names tables</h2> \n
             <form action=\"\" method=\"post\"> \n
-                 <input type=\"hidden\" id=\"TableNameLastStep\" name=\"TableNameLastStep\">
-                 Table Name: <input type=\"text\" name=\"tableStringLastStep\"> <br /><br />
+                 <input type=\"hidden\" id=\"TableNameLastStep\" name=\"TableNameLastStep\" value =" . $_POST['selectedTableToView'] . "> \n
                 <select name=\"ColumnNames[]\" multiple = \"multiple\"> \n
                     <option value=\"\" disabled selected>Select Attributes To Include</option>";
                     if (connectToDB()) {
@@ -470,16 +469,19 @@
             }
             
             $sqlquery = rtrim($sqlquery, ", ");
-            $tableName = $_POST['tableStringLastStep'];
-
-            $tuple = array (
-                ":bind1" => $_POST['tableStringLastStep']
-            );
-            $alltuples = array (
-                $tuple
-            );
+            $tableName = $_POST['TableNameLastStep'];
+            echo "our table is called :";
+            echo $tableName;
+            echo " table";
+            // $tuple = array (
+            //     ":bind1" => $_POST['tableStringLastStep']
+            // );
+            // $alltuples = array (
+            //     $tuple
+            // );
             // $sqlquery .=  " FROM :bind1";
             // $result  = executeBoundSQL($sqlquery, $alltuples); this doesnt work?
+            
             $result  = executePlainSQL($sqlquery . " FROM " . $tableName);
             // echo $_SESSION['SavedSelectedTable'];
             // echo $_COOKIE["cookieSelectedTable"];
