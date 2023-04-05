@@ -51,6 +51,7 @@
             padding-top: 100px;
             display: flex;
             flex-direction: column;
+            max-height: 400;
             justify-content: center;
             align-items: center;
             height: 100%;
