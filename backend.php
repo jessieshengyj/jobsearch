@@ -162,9 +162,9 @@
 
         // echo $_SESSION['SavedSelectedTable'];
         // echo "AT START";
-        ini_set('display_errors', 1);
-        ini_set('display_startup_errors', 1);
-        error_reporting(E_ALL);
+        // ini_set('display_errors', 1);
+        // ini_set('display_startup_errors', 1);
+        // error_reporting(E_ALL);
        
         $success = True; //keep track of errors so it redirects the page only if there are no errors
         $db_conn = NULL; // edit the login credentials in connectToDB()
@@ -227,8 +227,6 @@
                     OCIBindByName($statement, $bind, $val);
                     unset ($val); //make sure you do not remove this. Otherwise $val will remain in an array object wrapper which will not be recognized by Oracle as a proper datatype
 				}
-                echo "our statement";
-                echo $statement;
                 $r = OCIExecute($statement, OCI_DEFAULT);
                 if (!$r) {
                     echo "<br>Cannot execute the following command: " . $cmdstr . "<br>";
@@ -473,7 +471,6 @@
             }
             
             $sqlquery = rtrim($sqlquery, ", ");
-            echo  $sqlquery;
             $tableName = $_POST['tableStringLastStep'];
 
             $tuple = array (
@@ -482,9 +479,6 @@
             $alltuples = array (
                 $tuple
             );
-            echo "We here";
-            print_r($tuple);
-            print_r($alltuples);
             // $sqlquery .=  " FROM :bind1";
             // $result  = executeBoundSQL($sqlquery, $alltuples); this doesnt work?
             $result  = executePlainSQL($sqlquery . " FROM " . $tableName);
