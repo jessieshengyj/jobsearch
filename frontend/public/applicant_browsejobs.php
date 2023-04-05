@@ -224,9 +224,9 @@
                         <a href="#two">Companies Offering Multiple Jobs</a>
                         <a href="#three">Browse Jobs by Category</a>
                         <a href="#four">Remote and In Person Companies</a>
-                        <a href="#five">Highest Paying Job Category</a>
+                        <a href="#five">Highest Salary Job Category</a>
                         <a href="#six">Find All Jobs for a Company</a>
-                        <!-- <a href="#result">View Results</a> -->
+                        <a href="#result">View Results</a>
                     </div>
                 </div>
             </div>
@@ -320,9 +320,9 @@
 
 
         <?php
-        ini_set('display_errors', 1);
-        ini_set('display_startup_errors', 1);
-        error_reporting(E_ALL);
+        // ini_set('display_errors', 1);
+        // ini_set('display_startup_errors', 1);
+        // error_reporting(E_ALL);
 		//this tells the system that it's no longer just parsing html; it's now parsing PHP
 
         $success = True; //keep track of errors so it redirects the page only if there are no errors
@@ -659,7 +659,6 @@
 
         function printBrowseJobs($result) { //prints results from a select statement
             // print_r($result);
-            echo "<br>Retrieved data from table demoTable:<br>";
             echo "<table>";
             echo "<tr><th>Job ID</th><th>Position Name</th><th>Job Category</th><th>Job is Remote</th><th>Job Start Date</th><th>Application Deadline</th><th>Company ID</th></tr>";
             // echo "<tr><th>TestHeader</th></tr>";
@@ -704,5 +703,6 @@
             handleGETRequest();
         }
 		?>
+        <div id="result"></div>
 	</body>
 </html>

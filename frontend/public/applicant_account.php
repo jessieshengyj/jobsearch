@@ -188,7 +188,7 @@
                     Name: <input type="text" name="newName"> <br /><br />
                     Email Address: <input type="text" name="UpdEmail"> <br /><br />
                     Address: <input type="text" name="UpdAddress"> <br /><br />
-                    Phone Numer: <input type="text" name="UpdPhoneNumber"> <br /><br />
+                    Phone Number: <input type="text" name="UpdPhoneNumber"> <br /><br />
                     <input type="submit" value="Update" name="updateAccountInfoSubmit" class="button"></p>
                 </div>
             </form>
@@ -439,7 +439,6 @@
             );
 
             $result = executeBoundSQL("select J1.JobID, J1.PositionName, J2.JobCategory, J1.Remote, J1.StartDate, J1.ApplicationDeadline, J1.CompanyID from Job1 J1, Job2 J2 where J2.JobCategory = :bind1 AND J1.PositionName = J2.PositionName ", $alltuples);
-            print_r($result);
             printBrowseJobs($result);
         }
         // HANDLE ALL POST ROUTES
