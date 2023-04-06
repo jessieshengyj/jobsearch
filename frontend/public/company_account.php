@@ -257,7 +257,7 @@
 
                 $r = OCIExecute($statement, OCI_DEFAULT);
                 if (!$r) {
-                    // echo "<br>Cannot execute the following command: " . $cmdstr . "<br>";
+                    echo "<br>Cannot execute the following command: " . $cmdstr . "<br>";
                     $e = OCI_Error($statement); // For OCIExecute errors, pass the statementhandle
                     $emessage = $e['message'];
                     $companyIDNotUnique = "ORA-00001: unique constraint (ORA_DEVR07.SYS_C001878699) violated";
