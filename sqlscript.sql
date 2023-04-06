@@ -109,7 +109,7 @@ FOREIGN KEY (Country, PostalCode, Addy) REFERENCES Location4,
 FOREIGN KEY (Country, PostalCode) REFERENCES Location3,
 FOREIGN KEY (Country, PostalCode) REFERENCES Location1,
 FOREIGN KEY (CompanyID) REFERENCES Company
-ON DELETE SET CASCADE
+ON DELETE CASCADE
 );
 
 
