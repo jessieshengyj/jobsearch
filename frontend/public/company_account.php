@@ -18,123 +18,14 @@
 
   <html>
     <head>
-        <title>Manage Applicant Account</title>
+        <title>Post Job</title>
         <style>
             <?php include 'style.css'; ?>
-            <?php include 'images/favico.ico'; ?>
+            <?php include 'images/favicon.ico'; ?>
         /* <link rel="stylesheet" type='text/css' href="style.php" /> */
-        html, body {
-            background: linear-gradient(100grad, #937ea2, #1f2560);
-        }
-
-        body, div, form, input, select, p {
-            font-family: Roboto, Arial, sans-serif;
-            font-size: 16px;
-            color: #eee;
-        }
-
-        body {
-            margin: 0;
-            font-family: Helvetica, serif;
-            background-size: cover;
-        }
-
-        h1, h2 {
-            text-transform: uppercase;
-            font-weight: 400;
-        }
-
-        h2 {
-            margin: 0 0 0 5px;
-        }
-        .main-block {
-            padding-top: 100px;
-            display: flex;
-            flex-direction: column;
-            max-height: 400;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-            padding: 25px;
-            background: rgba(0, 0, 0, 0);
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-
-        }
-
-        form {
-            padding: 25px;
-            padding-bottom: 0px;
-        }
-
-        form {
-            background: rgba(0,0,0,0.5);
-            border-radius: 15px;
-        }
-
-        .title {
-            display: flex;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-
-        .info {
-            display: flex;
-            flex-direction: column;
-        }
-
-        input, select {
-            padding: 5px;
-            margin-bottom: 30px;
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid #eee;
-        }
-
-        input::placeholder {
-            color: #eee;
-        }
-
-        button {
-            padding: 10px 5px;
-            /*border-radius: 5px;*/
-            background: #26a9e0;
-            font-size: 15px;
-            font-weight: 400;
-            color: #fff;
-            border: none;
-        }
-
-        button {
-            width: 100%;
-        }
-        button:hover {
-            background: #85d6de;
-        }
-        @media (min-width: 568px) {
-            html, body {
-                height: 100%;
-            }
-
-            .main-block {
-                flex-direction: row;
-                height: calc(100% - 50px);
-            }
-
-            form {
-                flex: 1;
-                height: auto;
-            }
-
-            .navbar_container{
-                padding-bottom: 50px;
-            }
-
-
-        }
-    </style>
+        </style>
     </head>
+
     <body>
         <div class="navbar_container">
             <div class="navbar">
@@ -160,43 +51,40 @@
         </div>
     </body>
 
-    <body>
-        <div class="main-block", style="padding-top: 170px">
-            <form method="POST" action="company_account.php"> <!--refresh page when submitted-->
-                <div class="title">
-                    <h2>Create a Company</h2>
-                </div>
-                <div class="info">
-                    <input type="hidden" id="insertCompanyRequest" name="insertCompanyRequest">
-                    Company ID (number) [Required Field]: <input type="text" name="InsCompanyCompanID"> <br /><br />
-                    Company Name: <input type="text" name="InsCompanyName"> <br /><br />
-                    Number of Employees (Number): <input type="text" name="InsCompanyNumberOfEmployees"> <br /><br />
-                    <input type="submit" value="Create" name="insertSubmit" class="button"></p>
-                </div>
-            </form>
-        </div>
+    <body style="background: linear-gradient(100grad, #bda7cb, #6f7ca2)">
+        <div class="main_company_postjob" style="padding-bottom: 100px; padding-top: 30px">
+            <div class="form" style="text-align: center" id="FullTime">
+                <form class="job_form" method="POST" action="company_postjob.php">
+                <h1>Post a New Job</h1>
+                <fieldset><br>
+                <legend>Job Info</legend>
 
-        <div class="main-block">
-            <form method="POST" action="company_account.php"> <!--refresh page when submitted-->
-                <div class="title">
-                    <h2>Delete a Company</h2>
-                </div>
-                <div class="info">
-                    <input type="hidden" id="deleteCompanyRequest" name="deleteCompanyRequest">
-                    Company ID (number): <input type="text" name="DelCompanyCompanID"> <br /><br />
-                    <input type="submit" value="Delete" name="DeleteSubmit" class="button"></p>
-                </div>
-            </form>
+                <input type="hidden" id="insertJobRequest" name="insertJobRequest">
+                Job ID (Number) [Required Field]: <input type="text" name="InsJobID"> <br /><br />
+                Application Deadline (yyyy--mm--dd): <input type="text" name="InsJobDeadline"> <br /><br />
+                Remote (yes/no): <input type="text" name="InsJobRemote"> <br /><br />
+                Position Name [Required Field]: <input type="text" name="InsJobPosName"> <br /><br />
+                Start Date (yyyy--mm--dd): <input type="text" name="InsJobStartDate"> <br /><br />
+                Company ID (Number) [Required Field]: <input type="text" name="InsJobCompID"> <br /><br />
+                Job Category: <input type="text" name="InsJobCatagory"> <br /><br />
+
+                </fieldset><br>
+                <input class="button" type="submit" value="Post" name="insertSubmit"></p>
+                <!-- <input class="button" type="submit" value="Submit" name="fulltimeSubmit"><br> -->
+                </form>
+            </div>
         </div>
+    </body>
+
+    <body>
+
 
         <?php
-        // ini_set('display_errors', 1);
-        // ini_set('display_startup_errors', 1);
-        // error_reporting(E_ALL);
 		//this tells the system that it's no longer just parsing html; it's now parsing PHP
 
         $success = True; //keep track of errors so it redirects the page only if there are no errors
         $db_conn = NULL; // edit the login credentials in connectToDB()
+        $job2OK = 0;
         $show_debug_alert_messages = False; // set to True if you want alerts to show you which methods are being triggered (see how it is used in debugAlertMessage())
 
         function debugAlertMessage($message) {
@@ -225,9 +113,10 @@
             if (!$r) {
                 echo "<br>Cannot execute the following command: " . $cmdstr . "<br>";
                 $e = oci_error($statement); // For OCIExecute errors pass the statementhandle
-                echo htmlentities($e['message']);
+                // echo htmlentities($e['message']);
+                $success = False;
             }
-            $success = False;
+            
 			return $statement;
 		}
 
@@ -257,42 +146,70 @@
 
                 $r = OCIExecute($statement, OCI_DEFAULT);
                 if (!$r) {
-                    // echo "<br>Cannot execute the following command: " . $cmdstr . "<br>";
+                    echo "<br>Cannot execute the following command: " . $cmdstr . "<br>";
                     $e = OCI_Error($statement); // For OCIExecute errors, pass the statementhandle
                     $emessage = $e['message'];
-                    $companyIDNotUnique = "ORA-00001: unique constraint (ORA_DEVR07.SYS_C001878699) violated";
-                    $NullCompanyID = "ORA-01400: cannot insert NULL into (\"ORA_DEVR07\".\"COMPANY\".\"COMPANYID\")";
-                    $UserIDNotNumber = "ORA-01722: invalid number";
+                    echo $emessage;
+                    $JobIDNotUnique = "ORA-00001: unique constraint (ORA_DEVR07.SYS_C001878700) violated";
+                    $NullJobID = "ORA-01400: cannot insert NULL into (\"ORA_DEVR07\".\"JOB1\".\"JOBID\")";
+                    $JobCompIDNotNumber = "ORA-01722: invalid number";
+                    $NoSuchCompany = "ORA-02291: integrity constraint (ORA_DEVR07.SYS_C001878701) violated - parent key not found";
+                    $NullJobPosition = "ORA-01400: cannot insert NULL into (\"ORA_DEVR07\".\"JOB2\".\"POSITIONNAME\")";
+                    $NullCompanyID = "ORA-01400: cannot insert NULL into (\"ORA_DEVR07\".\"JOB1\".\"COMPANYID\")";
                     echo "<script>";    
                     switch ($emessage) {
-                        case $companyIDNotUnique:
-                            echo "alert('Company Creation unsuccessful, someone else already has that Company ID,
-                             please try again with a different company ID');";
+                        case $JobIDNotUnique:
+                            echo "alert('Job post unsuccessful, there is already another job with that ID, please try again with a different ID');";
+                            break;
+                        case $NullJobID:
+                            echo "alert('Job post unsuccessful, ensure you entered a value for job ID and try again');";
+                            break;
+                        case $JobCompIDNotNumber:
+                            echo "alert('Job post unsuccessful, ensure that you entered a number for the Company ID and Job ID, please try again');";
+                            break;
+                        case $NoSuchCompany:
+                            echo "alert('Job post unsuccessful, there is no company that goes by that company ID, ensure that the company ID is correct and that the company has been created and try again');";
+                            break;
+                        case $NullJobPosition:
+                            // echo "Job post unsuccessful, ensure that you enetered a value for position name and try again"; 
+                            echo "alert('Job post unsuccessful, ensure that you entered a value for position name and try again');";
+                            // $job2NullFail = 1;
                             break;
                         case $NullCompanyID:
-                            echo "alert('Company Creation/Deletion unsuccessful, ensure you entered a value for Company ID and try again');";
-                            break;
-                        case $UserIDNotNumber:
-                            echo "alert('Company Creation/Deletion unsuccessful, ensure that you entered a number for the Company ID and (if applicable) Number of Employees, please try again');";
+                            echo "alert('Job post unsuccessful, ensure that you entered a value for the company ID and try again');";
                             break;
                         default:
-                        // echo $e['message']; 
-                            if (str_contains($emessage, "ORA-00001")) {
-                                echo "alert('Company Creation/Update unsuccessful, there is already a company with that ID');";
+                            if (str_contains($emessage, "ORA-00001")) {   
+                                global $job2OK;
+                                if ($job2OK == 0) {
+                                    // here we are in job2, cant be in job1 bc if job2 failed job1 doesnt run
+                                } else {
+                                    echo "alert('Job post unsuccessful, there is already another job with that ID, please try again with a different ID');";
+                                }        
+                            } else if (str_contains($emessage, "ORA-02291")) {
+                                echo "alert('Job post unsuccessful, there is no company that goes by that company ID, ensure that the company ID is correct and that the company has been created and try again');";
                             } else {
-                                echo "alert('An unexpected error has occured, please double check all information and try again');";   
-                            }
-                                          
+                                echo "alert('Job post unsuccessful, An unexpected error has occured, please double check all information and try again');";  
+                            }             
                     }
                     echo "</script>";
                     $success = False;
                 } else {
-                    echo "<script>";
-                    echo "alert('Company successfully created/deleted');";
-                    echo "</script>";
+                    global $job2OK;
+                    if ($job2OK == 0) {
+                        // here were sucess where job2 failed, but job1 went through 
+                        // or job1 passed (in which the message will just be the error alert from job2 failing so no messages needed here)
+                        $job2OK = 1;
+                    } else {
+                        // here were going through second success, means both job2, job1 were good
+                        echo "<script>";
+                        echo "alert('Job post successfully created');";
+                        echo "</script>";
+                    }
+                    
                 }
             }
-        return $statement;
+            return $statement;
         }
 
         function printBrowseJobs($result) { //prints results from a select statement
@@ -390,20 +307,8 @@
             global $db_conn;
 
             //Getting the values from user and insert data into the table
-            $tuple = array (
-                ":bind1" => $_POST['InsJobID'],
-                ":bind2" => $_POST['InsJobDeadline'],
-                ":bind3" => $_POST['InsJobRemote'],
-                ":bind4" => $_POST['InsJobPosName'],
-                ":bind5" => $_POST['InsJobStartDate'],
-                ":bind6" => $_POST['InsJobCompID']
-            );
 
-            $alltuples = array (
-                $tuple
-            );
-
-            executeBoundSQL("insert into Job1 values (:bind1, :bind2, :bind3, :bind4, :bind5, :bind6)", $alltuples);
+            
             $tuple = array (
                 ":bind1" => $_POST['InsJobPosName'],
                 ":bind2" => $_POST['InsJobCatagory']
@@ -414,7 +319,27 @@
             );
 
             executeBoundSQL("insert into Job2 values (:bind1, :bind2) ", $alltuples);
-            OCICommit($db_conn);
+            OCICommit($db_conn);  
+            global $job2OK;
+            if ($job2OK) {
+                $tuple = array (
+                    ":bind1" => $_POST['InsJobID'],
+                    ":bind2" => $_POST['InsJobDeadline'],
+                    ":bind3" => $_POST['InsJobRemote'],
+                    ":bind4" => $_POST['InsJobPosName'],
+                    ":bind5" => $_POST['InsJobStartDate'],
+                    ":bind6" => $_POST['InsJobCompID']
+                );
+    
+                $alltuples = array (
+                    $tuple
+                );
+                
+                executeBoundSQL("insert into Job1 values (:bind1, :bind2, :bind3, :bind4, :bind5, :bind6)", $alltuples);
+                OCICommit($db_conn);
+            }
+           
+            
         }
 
         function handleInsertCompanyRequest() {
@@ -445,7 +370,7 @@
                 $tuple
             );
 
-            executeBoundSQL("delete from Company where CompanyID = :bind1", $alltuples);
+            executeBoundSQL("delete from Company where CompanyID = :bind1:", $alltuples);
             OCICommit($db_conn);
         }
 
@@ -492,15 +417,24 @@
         function handleCountJobByTypeRequest() {
             global $db_conn;
 
-            $result = executePlainSQL("SELECT J2.JobCategory, Count(*) FROM Job1 J1, Job2 J2 WHERE J1.PositionName = J2.PositionName GROUP BY J2.JobCategory");
-            echo "<br>Found Number of Jobs grouped by category:<br>";
-            echo "<table>";
-            echo "<tr><th>Job Category</th><th>Number of Jobs in Category</th></tr>";
+            $result= executePlainSQL("SELECT DISTINCT JobCategory FROM Job2");
+             echo "<table>";
+            echo "<tr><th>Job Category</th></tr>";
             while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-                echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] . "</td></tr>"; //or just use "echo $row[0]"
+                echo "<tr><td>" . $row[0] . "</td></tr>"; //or just use "echo $row[0]"
             }
 
             echo "</table>";
+
+            // $result = executePlainSQL("SELECT J2.JobCategory, Count(*) FROM Job1 J1, Job2 J2 WHERE J1.PositionName = J2.PositionName GROUP BY J2.JobCategory");
+            // echo "<br>Found Number of Jobs grouped by category:<br>";
+            // echo "<table>";
+            // echo "<tr><th>Job Category</th><th>Number of Jobs in Category</th></tr>";
+            // while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+            //     echo "<tr><td>" . $row[0] . "</td><td>" . $row[1] . "</td></tr>"; //or just use "echo $row[0]"
+            // }
+
+            // echo "</table>";
 
         }
 
