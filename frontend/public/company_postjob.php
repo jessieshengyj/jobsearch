@@ -63,7 +63,7 @@
                 Job ID (Number) [Required Field]: <input type="text" name="InsJobID"> <br /><br />
                 Application Deadline (yyyy--mm--dd): <input type="text" name="InsJobDeadline"> <br /><br />
                 Remote (yes/no): <input type="text" name="InsJobRemote"> <br /><br />
-                Position Name: <input type="text" name="InsJobPosName"> <br /><br />
+                Position Name [Required Field]: <input type="text" name="InsJobPosName"> <br /><br />
                 Start Date (yyyy--mm--dd): <input type="text" name="InsJobStartDate"> <br /><br />
                 Company ID (Number) [Required Field]: <input type="text" name="InsJobCompID"> <br /><br />
                 Job Category: <input type="text" name="InsJobCatagory"> <br /><br />
@@ -80,13 +80,11 @@
 
 
         <?php
-        // ini_set('display_errors', 1);
-        // ini_set('display_startup_errors', 1);
-        // error_reporting(E_ALL);
 		//this tells the system that it's no longer just parsing html; it's now parsing PHP
 
         $success = True; //keep track of errors so it redirects the page only if there are no errors
         $db_conn = NULL; // edit the login credentials in connectToDB()
+        $job2OK = 0;
         $show_debug_alert_messages = False; // set to True if you want alerts to show you which methods are being triggered (see how it is used in debugAlertMessage())
 
         function debugAlertMessage($message) {
@@ -148,43 +146,67 @@
 
                 $r = OCIExecute($statement, OCI_DEFAULT);
                 if (!$r) {
-                    // echo "<br>Cannot execute the following command: " . $cmdstr . "<br>";
+                    echo "<br>Cannot execute the following command: " . $cmdstr . "<br>";
                     $e = OCI_Error($statement); // For OCIExecute errors, pass the statementhandle
                     $emessage = $e['message'];
+                    echo $emessage;
                     $JobIDNotUnique = "ORA-00001: unique constraint (ORA_DEVR07.SYS_C001878700) violated";
                     $NullJobID = "ORA-01400: cannot insert NULL into (\"ORA_DEVR07\".\"JOB1\".\"JOBID\")";
                     $JobCompIDNotNumber = "ORA-01722: invalid number";
                     $NoSuchCompany = "ORA-02291: integrity constraint (ORA_DEVR07.SYS_C001878701) violated - parent key not found";
                     $NullJobPosition = "ORA-01400: cannot insert NULL into (\"ORA_DEVR07\".\"JOB2\".\"POSITIONNAME\")";
-                    echo "<br>";    
+                    $NullCompanyID = "ORA-01400: cannot insert NULL into (\"ORA_DEVR07\".\"JOB1\".\"COMPANYID\")";
+                    echo "<script>";    
                     switch ($emessage) {
                         case $JobIDNotUnique:
-                            echo "Job post unsuccessful, there is already another job with that ID, please try again with a different ID";
+                            echo "alert('Job post unsuccessful, there is already another job with that ID, please try again with a different ID');";
                             break;
-                        case $NullCompanyID:
-                            echo "Job post unsuccessful, ensure you entered a value for job ID and try again";
+                        case $NullJobID:
+                            echo "alert('Job post unsuccessful, ensure you entered a value for job ID and try again');";
                             break;
                         case $JobCompIDNotNumber:
-                            echo "Job post unsuccessful, ensure that you entered a number for the Company ID and Job ID, please try again";
+                            echo "alert('Job post unsuccessful, ensure that you entered a number for the Company ID and Job ID, please try again');";
                             break;
                         case $NoSuchCompany:
-                            echo "Job post unsuccessful, there is no company that goes by that company ID, ensure that the company ID is correct 
-                            and that the company has been created and try again";
+                            echo "alert('Job post unsuccessful, there is no company that goes by that company ID, ensure that the company ID is correct and that the company has been created and try again');";
                             break;
                         case $NullJobPosition:
                             // echo "Job post unsuccessful, ensure that you enetered a value for position name and try again"; 
+                            echo "alert('Job post unsuccessful, ensure that you entered a value for position name and try again');";
+                            // $job2NullFail = 1;
+                            break;
+                        case $NullCompanyID:
+                            echo "alert('Job post unsuccessful, ensure that you entered a value for the company ID and try again');";
                             break;
                         default:
-                        echo $e['message']; 
-                        echo "<br>";
-                        echo "An unexpected error has occured, please double check all information and try again";                    
+                            if (str_contains($emessage, "ORA-00001")) {   
+                                global $job2OK;
+                                if ($job2OK == 0) {
+                                    // here we are in job2, cant be in job1 bc if job2 failed job1 doesnt run
+                                } else {
+                                    echo "alert('Job post unsuccessful, there is already another job with that ID, please try again with a different ID');";
+                                }        
+                            } else if (str_contains($emessage, "ORA-02291")) {
+                                echo "alert('Job post unsuccessful, there is no company that goes by that company ID, ensure that the company ID is correct and that the company has been created and try again');";
+                            } else {
+                                echo "alert('Job post unsuccessful, An unexpected error has occured, please double check all information and try again');";  
+                            }             
                     }
-                    echo "<br>";
+                    echo "</script>";
                     $success = False;
                 } else {
-                    echo "<br>";
-                    echo "Job post successfully created";
-                    echo "<br>";
+                    global $job2OK;
+                    if ($job2OK == 0) {
+                        // here were sucess where job2 failed, but job1 went through 
+                        // or job1 passed (in which the message will just be the error alert from job2 failing so no messages needed here)
+                        $job2OK = 1;
+                    } else {
+                        // here were going through second success, means both job2, job1 were good
+                        echo "<script>";
+                        echo "alert('Job post successfully created');";
+                        echo "</script>";
+                    }
+                    
                 }
             }
             return $statement;
@@ -285,20 +307,8 @@
             global $db_conn;
 
             //Getting the values from user and insert data into the table
-            $tuple = array (
-                ":bind1" => $_POST['InsJobID'],
-                ":bind2" => $_POST['InsJobDeadline'],
-                ":bind3" => $_POST['InsJobRemote'],
-                ":bind4" => $_POST['InsJobPosName'],
-                ":bind5" => $_POST['InsJobStartDate'],
-                ":bind6" => $_POST['InsJobCompID']
-            );
 
-            $alltuples = array (
-                $tuple
-            );
-
-            executeBoundSQL("insert into Job1 values (:bind1, :bind2, :bind3, :bind4, :bind5, :bind6)", $alltuples);
+            
             $tuple = array (
                 ":bind1" => $_POST['InsJobPosName'],
                 ":bind2" => $_POST['InsJobCatagory']
@@ -309,7 +319,27 @@
             );
 
             executeBoundSQL("insert into Job2 values (:bind1, :bind2) ", $alltuples);
-            OCICommit($db_conn);
+            OCICommit($db_conn);  
+            global $job2OK;
+            if ($job2OK) {
+                $tuple = array (
+                    ":bind1" => $_POST['InsJobID'],
+                    ":bind2" => $_POST['InsJobDeadline'],
+                    ":bind3" => $_POST['InsJobRemote'],
+                    ":bind4" => $_POST['InsJobPosName'],
+                    ":bind5" => $_POST['InsJobStartDate'],
+                    ":bind6" => $_POST['InsJobCompID']
+                );
+    
+                $alltuples = array (
+                    $tuple
+                );
+                
+                executeBoundSQL("insert into Job1 values (:bind1, :bind2, :bind3, :bind4, :bind5, :bind6)", $alltuples);
+                OCICommit($db_conn);
+            }
+           
+            
         }
 
         function handleInsertCompanyRequest() {
