@@ -35,6 +35,7 @@
 
         select{
             min-height: 150px;
+            background-color: black;
         }
 
         body {
@@ -90,7 +91,7 @@
         input, select {
             padding: 5px;
             margin-bottom: 30px;
-            background: transparent;
+            /* background: transparent; */
             border: none;
             border-bottom: 1px solid #eee;
         }
@@ -154,7 +155,14 @@
         }
 
         div.blacktd{
-            color: #FF0000;
+            font-family: Roboto, Arial, sans-serif;
+            color: #eee;
+        }
+
+        select.select-1 {
+             min-height: 50px;
+             background-color: black;
+             color: white;
         }
 
     </style>
@@ -205,7 +213,7 @@
                     <h2>View tables</h2>
                 </div>
                 <div class="info">
-                    <select name="selectedTableToView">
+                    <select name="selectedTableToView" class = "select-1">
                     <option value="" disabled selected>Choose a table to view</option>
                         <?php
                         handleDisplayTables();
@@ -710,7 +718,7 @@
         }
 
 
-		
+
 		?>
 	</body>
 </html>
