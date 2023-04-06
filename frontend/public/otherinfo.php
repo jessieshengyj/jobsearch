@@ -33,6 +33,10 @@
             color: #eee;
         }
 
+        select{
+            min-height: 150px;
+        }
+
         body {
             margin: 0;
             font-family: Helvetica, serif;
@@ -49,18 +53,17 @@
         }
         .main-block {
             padding-top: 100px;
-            display: flex;
+            /* display: flex; */
             margin-top: 5rem;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100%;
-            padding: 25px;
+            padding: 10px;
             background: rgba(0, 0, 0, 0);
             max-width: 700px;
             margin-left: auto;
             margin-right: auto;
-
         }
 
         form {
@@ -90,10 +93,6 @@
             background: transparent;
             border: none;
             border-bottom: 1px solid #eee;
-        }
-
-        input::placeholder {
-            color: #eee;
         }
 
         button {
@@ -138,6 +137,8 @@
             border-collapse: collapse;
             width: 70%;
             margin: auto;
+            padding-top: 20px;
+            padding-bottom: 0px;
         }
 
         .resultTable {
@@ -151,6 +152,11 @@
             text-align: left;
             padding: 8px;
         }
+
+        div.blacktd{
+            color: #FF0000;
+        }
+
     </style>
     </head>
     <body>
@@ -527,7 +533,7 @@
                         disconnectFromDB();
                     }
             echo   "</select> \n
-                <input type=\"submit\" name=\"SelectColumnNames\" value=\"Select Attributes\"> \n
+                <input type=\"submit\" name=\"SelectColumnNames\" value=\"Select Attributes\" class = \"button\"> \n
                 </div> \n
             </form> \n
             </div>";
@@ -682,11 +688,13 @@
         function handleDisplayTables() {
             if (connectToDB()) {
                 $result= executePlainSQL("SELECT table_name FROM user_tables");
+                echo "<div class = \"blacktd\">";
                 while ($row = oci_fetch_array($result, OCI_BOTH))
                     {
                          echo "<option value= ". $row[0] . ">" . $row[0] . "</option>";
                     }
                 disconnectFromDB();
+                echo "</div>";
             }
         }
 
