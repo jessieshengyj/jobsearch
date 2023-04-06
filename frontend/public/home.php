@@ -69,9 +69,9 @@
     <body>
     <div class="center">
         <h1 style="padding-top: 1000px">
-            <span>Developed by: Devon, Jesse, Lilie</span>
-            <span>Developed by: Devon, Jesse, Lilie</span>
-            <span>Developed by: Devon, Jesse, Lilie</span>
+            <span>Developed by: Devin Chikhlia, Jessie Sheng, Lily Zhang</span>
+            <span>Developed by: Devin Chikhlia, Jessie Sheng, Lily Zhang</span>
+            <span>Developed by: Devin Chikhlia, Jessie Sheng, Lily Zhang</span>
 
         </h1>
     </div>
@@ -181,7 +181,7 @@
 
             // Your username is ora_(CWL_ID) and the password is a(student number). For example,
 			// ora_platypus is the username and a12345678 is the password.
-            $db_conn = OCILogon("ora_", "a", "dbhost.students.cs.ubc.ca:1522/stu");
+            $db_conn = OCILogon("ora_lilyuzhe", "a86004801", "dbhost.students.cs.ubc.ca:1522/stu");
 
             if ($db_conn) {
                 debugAlertMessage("Database is Connected");
@@ -427,3 +427,4 @@
 		?>
 	</body>
 </html>
+
