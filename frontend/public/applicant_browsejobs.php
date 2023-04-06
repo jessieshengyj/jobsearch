@@ -18,7 +18,7 @@
 
   <html>
     <head>
-        <title>Manage Applicant Account</title>
+        <title>Applicant Browse Jobs</title>
         <style>
             <?php include 'style.css'; ?>
             <?php include 'images/favico.ico'; ?>

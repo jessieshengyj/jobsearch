@@ -18,7 +18,7 @@
 
   <html>
     <head>
-        <title>Manage Applicant Account</title>
+        <title>Other Info</title>
         <link rel="icon" type="image/x-icon" href="images/favico.ico">
         <style>
             <?php include 'style.css'; ?>

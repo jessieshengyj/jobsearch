@@ -18,7 +18,7 @@
 
   <html>
     <head>
-        <title>Post Job</title>
+        <title>Home</title>
         <style>
             <?php include 'style.css'; ?>
             <?php include 'images/favicon.ico'; ?>
