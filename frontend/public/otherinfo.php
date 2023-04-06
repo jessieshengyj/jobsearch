@@ -179,6 +179,20 @@
     </body>
 
     <body>
+        <?php
+            if (isset($_POST['reset']) || isset($_POST['updateAccountInfoSubmit']) ||
+                    isset($_POST['createAccount']) || isset($_POST['createCompany']) ||
+                    isset($_POST['createJob']) || isset($_POST['deleteCompany']) ||
+                    isset($_POST['findAllJobaForComp']) || isset($_POST['FindAttributes']) ||
+                    isset($_POST['FindAttributes']) || isset($_POST['SelectColumnNames'])) {
+                    handlePOSTRequest();
+                } else if (isset($_GET['countJobsRequest']) || isset($_GET['employersMultipleEmployees']) ||
+                isset($_GET['employersRemoteInPerson']) || isset($_GET['catWithHighestAvgSal'])) {
+                    handleGETRequest();
+                }
+        ?>
+    </body>
+    <body>
         <div class="main-block">
             <form action="otherinfo.php" method="post">
                 <div class="title">
@@ -497,7 +511,7 @@
             echo "<div class=\"main-block\"> \n
             <form action=\"\" method=\"post\"> \n
             <div class=\"title\"> \n
-            <h2>Select Column Names tables</h2> \n
+            <h2>Select Attributes from the table </h2> \n
             </div> \n
             <div class=\"info\"> \n
             <input type=\"hidden\" id=\"TableNameLastStep\" name=\"TableNameLastStep\" value =" . $_POST['selectedTableToView'] . "> \n
@@ -528,9 +542,6 @@
 
             $sqlquery = rtrim($sqlquery, ", ");
             $tableName = $_POST['TableNameLastStep'];
-            echo "our table is called :";
-            echo $tableName;
-            echo " table";
             // $tuple = array (
             //     ":bind1" => $_POST['tableStringLastStep']
             // );
@@ -691,16 +702,7 @@
         }
 
 
-		if (isset($_POST['reset']) || isset($_POST['updateAccountInfoSubmit']) ||
-            isset($_POST['createAccount']) || isset($_POST['createCompany']) ||
-             isset($_POST['createJob']) || isset($_POST['deleteCompany']) ||
-             isset($_POST['findAllJobaForComp']) || isset($_POST['FindAttributes']) ||
-             isset($_POST['FindAttributes']) || isset($_POST['SelectColumnNames'])) {
-            handlePOSTRequest();
-        } else if (isset($_GET['countJobsRequest']) || isset($_GET['employersMultipleEmployees']) ||
-         isset($_GET['employersRemoteInPerson']) || isset($_GET['catWithHighestAvgSal'])) {
-            handleGETRequest();
-        }
+		
 		?>
 	</body>
 </html>
