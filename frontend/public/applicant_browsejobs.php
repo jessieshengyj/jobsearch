@@ -401,7 +401,7 @@
                             break;
                         default:
                         // echo $e['message']; 
-                        echo "alert('Request unsuccessful, an unexpected error has occured, please double check all information and try again');";                    
+                            echo "alert('Request unsuccessful, an unexpected error has occured, please double check all information and try again');";                    
                     }
                     echo "</script>";
                     $success = False;
