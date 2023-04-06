@@ -49,13 +49,14 @@
             margin: 0 0 0 5px;
         }
         .main-block {
-            /* padding-top: 100px; */
+            margin-top: rem;
+            padding-top: 100px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100%;
-            /* padding: 25px; */
+            padding: 25px;
             background: rgba(0, 0, 0, 0);
             max-width: 700px;
             margin-left: auto;
@@ -393,17 +394,16 @@
                     $emessage = $e['message'];
                     // echo $emessage;
                     $UserIDNotNumber = "ORA-01722: invalid number";
-                    echo "<br>";    
+                    echo "<script>";    
                     switch ($emessage) {
                         case $UserIDNotNumber:
-                            echo "request unsuccessful, ensure that you entered a number for the Company ID, please try again";
+                            echo "alert('Request unsuccessful, ensure that you entered a number for the Company ID, please try again');";
                             break;
                         default:
                         // echo $e['message']; 
-                        echo "<br>";
-                        echo "An unexpected error has occured, please double check all information and try again";                    
+                        echo "alert('Request unsuccessful, an unexpected error has occured, please double check all information and try again');";                    
                     }
-                    echo "<br>";
+                    echo "</script>";
                     $success = False;
                 } else {
                     // echo "<br>";

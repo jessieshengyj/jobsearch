@@ -47,19 +47,22 @@
         h2 {
             margin: 0 0 0 5px;
         }
+
+
         .main-block {
             padding-top: 100px;
+            padding-bottom: 100px;
+            margin-top 5rem;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100%;
-            padding: 25px;
+            /* padding: 25px; */
             background: rgba(0, 0, 0, 0);
             max-width: 700px;
             margin-left: auto;
             margin-right: auto;
-
         }
 
         form {
@@ -135,6 +138,9 @@
     </style>
     </head>
     <body>
+   
+    </body>
+    <body>
         <div class="navbar_container">
             <div class="navbar">
                 <a href="home.php">Home</a>
@@ -158,7 +164,86 @@
             </div>
         </div>
     </body>
+    <?php
+    if (isset($_POST['reset']) || isset($_POST['updateAccountInfoSubmit']) || isset($_POST['insertSubmit']) || isset($_POST['DeleteSubmit'])) {
+        handlePOSTRequest();
+    } else if (isset($_GET['countJobsRequest']) || isset($_GET['employersMultipleEmployees'])) {
+        handleGETRequest();
+    }
+    function executeBoundSQL($cmdstr, $list) {
+        /* Sometimes the same statement will be executed several times with different values for the variables involved in the query.
+    In this case you don't need to create the statement several times. Bound variables cause a statement to only be
+    parsed once and you can reuse the statement. This is also very useful in protecting against SQL injection.
+    See the sample code below for how this function is used */
 
+        global $db_conn, $success;
+        $statement = OCIParse($db_conn, $cmdstr);
+
+        if (!$statement) {
+            echo "<br>Cannot parse the following command: " . $cmdstr . "<br>";
+            $e = OCI_Error($db_conn);
+            echo htmlentities($e['message']);
+            $success = False;
+        }
+
+        foreach ($list as $tuple) {
+            foreach ($tuple as $bind => $val) {
+                //echo $val;
+                //echo "<br>".$bind."<br>";
+                OCIBindByName($statement, $bind, $val);
+                unset ($val); //make sure you do not remove this. Otherwise $val will remain in an array object wrapper which will not be recognized by Oracle as a proper datatype
+            }
+
+            $r = OCIExecute($statement, OCI_DEFAULT);
+            if (!$r) {
+                // echo "<br>Cannot execute the following command: " . $cmdstr . "<br>";
+                $e = OCI_Error($statement); // For OCIExecute errors, pass the statementhandle
+                // print_r($e['message']);
+                $emessage = $e['message'];
+                $userIDNotUnique = "ORA-00001: unique constraint (ORA_DEVR07.SYS_C001878719) violated";
+                $NullUserID = "ORA-01400: cannot insert NULL into (\"ORA_DEVR07\".\"APPLICANT\".\"USERID\")";
+                $EmailInUse = "ORA-00001: unique constraint (ORA_DEVR07.SYS_C001878720) violated";
+                $NullEmail = "ORA-01400: cannot insert NULL into (\"ORA_DEVR07\".\"APPLICANT\".\"EMAIL\")";
+                $UserIDNotNumber = "ORA-01722: invalid number";
+                echo "<script>";    
+            switch ($emessage) {
+                case $userIDNotUnique:
+                    echo "alert('Account Creation/Update unsuccessful, someone else already has that UserID, please try again with a different ID');";
+                    break;
+                case $NullUserID:
+                    echo "alert('Account Creation/Update unsuccessful, ensure you entered a UserID and try again');";
+                    break;
+                case $EmailInUse:
+                    echo "alert('Account Creation/Update unsuccessful, someone is already has an account with that email, please try again with a different email');";
+                    break;
+                case $NullEmail:
+                    echo "alert('Account Creation/Update unsuccessful, ensure you entered an email and try again');";
+                    break; 
+                case $UserIDNotNumber:
+                    echo "alert('Account Creation/Update unsuccessful, ensure that you entered a number for the User ID');";
+                    break;
+                default:
+                    if (str_contains($emessage, "ORA-00001")) {
+                        echo "alert('Account Creation/Update unsuccessful, the email or user id is already in use, please try again');";
+                    } else {
+                        echo "alert('Account Creation/Update unsuccessful, an unexpected error has occured, please double check all information and try again');";
+                    }
+                 
+                  
+            }
+            
+                // echo htmlentities($e['message']);
+                echo "</script>";
+                $success = False;
+            } else {
+                echo "<br>";
+                echo "<script>alert('Account successfully created/updated');</script>";
+                echo "<br>";
+            }
+        }
+        return $statement;
+    }
+    ?>
     <body>
         <div class="main-block">
             <form method="POST" action="applicant_account.php"> <!--refresh page when submitted-->
@@ -237,76 +322,7 @@
 			return $statement;
 		}
 
-        function executeBoundSQL($cmdstr, $list) {
-            /* Sometimes the same statement will be executed several times with different values for the variables involved in the query.
-		In this case you don't need to create the statement several times. Bound variables cause a statement to only be
-		parsed once and you can reuse the statement. This is also very useful in protecting against SQL injection.
-		See the sample code below for how this function is used */
-
-			global $db_conn, $success;
-			$statement = OCIParse($db_conn, $cmdstr);
-
-            if (!$statement) {
-                echo "<br>Cannot parse the following command: " . $cmdstr . "<br>";
-                $e = OCI_Error($db_conn);
-                echo htmlentities($e['message']);
-                $success = False;
-            }
-
-            foreach ($list as $tuple) {
-                foreach ($tuple as $bind => $val) {
-                    //echo $val;
-                    //echo "<br>".$bind."<br>";
-                    OCIBindByName($statement, $bind, $val);
-                    unset ($val); //make sure you do not remove this. Otherwise $val will remain in an array object wrapper which will not be recognized by Oracle as a proper datatype
-				}
-
-                $r = OCIExecute($statement, OCI_DEFAULT);
-                if (!$r) {
-                    // echo "<br>Cannot execute the following command: " . $cmdstr . "<br>";
-                    $e = OCI_Error($statement); // For OCIExecute errors, pass the statementhandle
-                    // print_r($e['message']);
-                    $emessage = $e['message'];
-                    $userIDNotUnique = "ORA-00001: unique constraint (ORA_DEVR07.SYS_C001878719) violated";
-                    $NullUserID = "ORA-01400: cannot insert NULL into (\"ORA_DEVR07\".\"APPLICANT\".\"USERID\")";
-                    $EmailInUse = "ORA-00001: unique constraint (ORA_DEVR07.SYS_C001878720) violated";
-                    $NullEmail = "ORA-01400: cannot insert NULL into (\"ORA_DEVR07\".\"APPLICANT\".\"EMAIL\")";
-                    $UserIDNotNumber = "ORA-01722: invalid number";
-                    echo "<br>";    
-                switch ($emessage) {
-                    case $userIDNotUnique:
-                        echo "Account Creation/Update unsuccessful, someone else already has that UserID, please try again with a different ID";
-                        break;
-                    case $NullUserID:
-                        echo "Account Creation/Update unsuccessful, ensure you entered a UserID and try again";
-                        break;
-                    case $EmailInUse:
-                        echo "Account Creation/Update unsuccessful, someone is already has an account with that email, please try again with a different email";
-                        break;
-                    case $NullEmail:
-                        echo "Account Creation/Update unsuccessful, ensure you entered an email and try again";
-                        break; 
-                    case $UserIDNotNumber:
-                        echo "Account Creation/Update unsuccessful, ensure that you entered a number for the User ID";
-                        break;
-                    default:
-                    //    echo $e['message']; 
-                       echo "<br>";
-                       echo "An unexpected error has occured, please double check all information and try again";
-                      
-                }
-                
-                    // echo htmlentities($e['message']);
-                    echo "<br>";
-                    $success = False;
-                } else {
-                    echo "<br>";
-                    echo "Account successfully created/updated";
-                    echo "<br>";
-                }
-            }
-            return $statement;
-        }
+        
 
         function printBrowseJobs($result) { //prints results from a select statement
             echo "<br>Retrieved data from table demoTable:<br>";
@@ -556,11 +572,7 @@
         }
 
 
-		if (isset($_POST['reset']) || isset($_POST['updateAccountInfoSubmit']) || isset($_POST['insertSubmit']) || isset($_POST['DeleteSubmit'])) {
-            handlePOSTRequest();
-        } else if (isset($_GET['countJobsRequest']) || isset($_GET['employersMultipleEmployees'])) {
-            handleGETRequest();
-        }
+		
 		?>
 	</body>
 </html>

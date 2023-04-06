@@ -263,28 +263,33 @@
                     $companyIDNotUnique = "ORA-00001: unique constraint (ORA_DEVR07.SYS_C001878699) violated";
                     $NullCompanyID = "ORA-01400: cannot insert NULL into (\"ORA_DEVR07\".\"COMPANY\".\"COMPANYID\")";
                     $UserIDNotNumber = "ORA-01722: invalid number";
-                    echo "<br>";    
+                    echo "<script>";    
                     switch ($emessage) {
                         case $companyIDNotUnique:
-                            echo "Company Creation unsuccessful, someone else already has that Company ID, please try again with a different ID";
+                            echo "alert('Company Creation unsuccessful, someone else already has that Company ID,
+                             please try again with a different company ID');";
                             break;
                         case $NullCompanyID:
-                            echo "Company Creation/Deletion unsuccessful, ensure you entered a value for Company ID and try again";
+                            echo "alert('Company Creation/Deletion unsuccessful, ensure you entered a value for Company ID and try again');";
                             break;
                         case $UserIDNotNumber:
-                            echo "Account Creation/Update unsuccessful, ensure that you entered a number for the Company ID and Number of Employees, please try again";
+                            echo "alert('Company Creation/Deletion unsuccessful, ensure that you entered a number for the Company ID and (if applicable) Number of Employees, please try again');";
                             break;
                         default:
                         // echo $e['message']; 
-                        echo "<br>";
-                        echo "An unexpected error has occured, please double check all information and try again";                    
+                            if (str_contains($emessage, "ORA-00001")) {
+                                echo "alert('Company Creation/Update unsuccessful, there is already a company with that ID');";
+                            } else {
+                                echo "alert('An unexpected error has occured, please double check all information and try again');";   
+                            }
+                                          
                     }
-                    echo "<br>";
+                    echo "</script>";
                     $success = False;
                 } else {
-                    echo "<br>";
-                    echo "Company successfully created/deleted";
-                    echo "<br>";
+                    echo "<script>";
+                    echo "alert('Company successfully created/deleted');";
+                    echo "</script>";
                 }
             }
         return $statement;
