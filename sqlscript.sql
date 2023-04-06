@@ -33,7 +33,7 @@ ApplicationDeadline VARCHAR(20),
 Remote VARCHAR(20),
 PositionName VARCHAR(40),
 StartDate VARCHAR(20),
-CompanyID INTEGER,
+CompanyID INTEGER NOT NULL,
 FOREIGN KEY (CompanyID) REFERENCES Company
 ON DELETE CASCADE);
 
